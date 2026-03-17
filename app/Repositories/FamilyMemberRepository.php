@@ -11,7 +11,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = FamilyMember::with(['headOfFamily.user', 'user'])->where(function ($query) use ($search) {
+        $query = FamilyMember::with(['headOfFamily.user', 'headOfFamily.familyMembers.user', 'user'])->where(function ($query) use ($search) {
 
             if ($search) {
                 $query->search($search);
@@ -40,7 +40,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = FamilyMember::with(['headOfFamily.user', 'user'])->where('id', $id);
+        $query = FamilyMember::with(['headOfFamily.user', 'headOfFamily.familyMembers.user', 'user'])->where('id', $id);
         return $query->first();
     }
 
@@ -71,7 +71,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $familyMember->save();
 
             DB::commit();
-            return FamilyMember::with(['headOfFamily.user', 'user'])->findOrFail($familyMember->id);
+            return FamilyMember::with(['headOfFamily.user', 'headOfFamily.familyMembers.user', 'user'])->findOrFail($familyMember->id);
         } catch (\Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());

@@ -16,12 +16,12 @@ class HeadofFamilySeeder extends Seeder
      */
     public function run(): void
     {
-        UserFactory::new()->count(15)->create()->each(function ($user) {
+        UserFactory::new()->count(5)->create()->each(function ($user) {
             $headOfFamily = HeadofFamilyFactory::new()->create([
                 'user_id' => $user->id,
             ]);
 
-            FamilyMemberFactory::new()->count(5)->create([
+            FamilyMemberFactory::new()->count(3)->create([
                 'head_of_family_id' => $headOfFamily->id,
                 'user_id' => UserFactory::new()->create()->id,
             ]);

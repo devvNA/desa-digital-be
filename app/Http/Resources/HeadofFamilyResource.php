@@ -28,7 +28,26 @@ class HeadofFamilyResource extends JsonResource
             'phone_number' => $this->phone_number,
             'occupation' => $this->occupation,
             'marital_status' => $this->marital_status,
-            'family_member' => FamilyMemberResource::collection($this->whenLoaded('familyMembers')),
+            'family_member' => $this->whenLoaded('familyMembers', function () {
+                return $this->familyMembers->map(function ($member) {
+                    return [
+                        'id' => $member->id,
+                        'user' => [
+                            'id' => $member->user->id,
+                            'name' => $member->user->name,
+                            'email' => $member->user->email,
+                        ],
+                        'profile_picture' => $member->profile_picture,
+                        'identity_number' => $member->identity_number,
+                        'gender' => $member->gender,
+                        'date_of_birth' => $member->date_of_birth,
+                        'phone_number' => $member->phone_number,
+                        'occupation' => $member->occupation,
+                        'marital_status' => $member->marital_status,
+                        'relation' => $member->relation,
+                    ];
+                });
+            }),
         ];
     }
 }
