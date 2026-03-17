@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Requests\HeadofFamilyStoreRequest;
+use App\Http\Requests\HeadofFamilyUpdateRequest;
 use App\Http\Resources\HeadofFamilyResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\HeadOfFamilyRepositoryInterface;
+use Illuminate\Http\JsonResponse as HttpJsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HeadofFamilyController extends Controller
 {
@@ -68,15 +71,41 @@ class HeadofFamilyController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $headOfFamily = $this->headOfFamilyRepository->getById($id);
+            if (!$headOfFamily) {
+                return ResponseHelper::jsonResponse(false, 'Kepala keluarga tidak ditemukan', null, 404);
+            }
+            return ResponseHelper::jsonResponse(true, 'Data kepala keluarga berhasil diambil', new HeadofFamilyResource($headOfFamily), 200);
+        } catch (\Exception $e) {
+            return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(HeadofFamilyUpdateRequest $request, string $id)
     {
-        //
+        $request = $request->validated();
+
+        try {
+            $headOfFamily = $this->headOfFamilyRepository->getById($id);
+
+            if (!$headOfFamily) {
+                return ResponseHelper::jsonResponse(false, 'Kepala keluarga tidak ditemukan', null, 404);
+            }
+
+            $headOfFamily = $this->headOfFamilyRepository->update($id, $request);
+
+            return ResponseHelper::jsonResponse(true, 'Kepala keluarga berhasil diupdate', new HeadofFamilyResource($headOfFamily), 200);
+            // return new JsonResponse([
+            //     'success' => true,
+            //     'message' => 'Kepala keluarga berhasil diupdate',
+            // ], 200);
+        } catch (\Exception $e) {
+            return ResponseHelper::jsonResponse(false,  $e->getMessage(), null, 500);
+        }
     }
 
     /**
@@ -84,6 +113,15 @@ class HeadofFamilyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $headOfFamily = $this->headOfFamilyRepository->getById($id);
+            if (!$headOfFamily) {
+                return ResponseHelper::jsonResponse(false, 'Kepala keluarga tidak ditemukan', null, 404);
+            }
+            $headOfFamily = $this->headOfFamilyRepository->delete($id);
+            return ResponseHelper::jsonResponse(true, 'Kepala keluarga berhasil dihapus', null, 200);
+        } catch (\Exception $e) {
+            return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
+        }
     }
 }

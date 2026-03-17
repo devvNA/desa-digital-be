@@ -37,11 +37,11 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
         return $query->paginate($rowPerPage);
     }
 
-    // public function getById(string $id)
-    // {
-    //     $query = HeadOfFamily::where('id', $id)->first();
-    //     return $query;
-    // }
+    public function getById(string $id)
+    {
+        $query = HeadOfFamily::where('id', $id)->first();
+        return $query;
+    }
 
     public function create(array $data)
     {
@@ -73,39 +73,52 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
         }
     }
 
-    // public function update(string $id, array $data)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $headOfFamily = HeadOfFamily::find($id);
-    //         $headOfFamily->name = $data['name'];
-    //         if (isset($data['password'])) {
-    //             $headOfFamily->password = bcrypt($data['password']);
-    //         };
+    public function update(string $id, array $data)
+    {
+        DB::beginTransaction();
+        try {
+            $headOfFamily = HeadOfFamily::find($id);
 
-    //         $headOfFamily->save();
+            if (isset($data['profile_picture'])) {
+                $headOfFamily->profile_picture = $data['profile_picture']->store('asset/head-of-families', 'public');
+            }
+            $headOfFamily->identity_number = $data['identity_number'];
+            $headOfFamily->gender = $data['gender'];
+            $headOfFamily->date_of_birth = $data['date_of_birth'];
+            $headOfFamily->phone_number = $data['phone_number'];
+            $headOfFamily->occupation = $data['occupation'];
+            $headOfFamily->marital_status = $data['marital_status'];
 
-    //         DB::commit();
-    //         return $headOfFamily;
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
+            $headOfFamily->save();
 
-    // public function delete(string $id)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $headOfFamily = HeadOfFamily::find($id);
-    //         $headOfFamily->delete();
+            $userRepository = new UserRepository();
+            $userRepository->update($headOfFamily->user_id, [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => isset($data['password']) ? bcrypt($data['password']) : $headOfFamily->user->password,
+            ]);
 
-    //         DB::commit();
+            DB::commit();
+            return $headOfFamily;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
 
-    //         return $headOfFamily;
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
+    public function delete(string $id)
+    {
+        DB::beginTransaction();
+        try {
+            $headOfFamily = HeadOfFamily::find($id);
+            $headOfFamily->delete();
+
+            DB::commit();
+
+            return $headOfFamily;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
 }

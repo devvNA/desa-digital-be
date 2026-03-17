@@ -24,6 +24,22 @@ class FamilyMember extends Model
         'relation'
     ];
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function ($query) use ($search) {
+            $query->whereHas('user', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+                ->orWhere('identity_number', 'like', "%{$search}%")
+                ->orWhere('gender', 'like', "%{$search}%")
+                ->orWhere('date_of_birth', 'like', "%{$search}%")
+                ->orWhere('phone_number', 'like', "%{$search}%")
+                ->orWhere('occupation', 'like', "%{$search}%")
+                ->orWhere('marital_status', 'like', "%{$search}%")
+                ->orWhere('relation', 'like', "%{$search}%");
+        });
+    }
+
     public function headOfFamily()
     {
         return $this->belongsTo(HeadOfFamily::class);

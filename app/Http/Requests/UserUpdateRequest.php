@@ -25,14 +25,4 @@ class UserUpdateRequest extends FormRequest
             'password' => 'Kata Sandi',
         ];
     }
-
-    public function messages()
-    {
-        return [
-            'required' => ':attribute wajib diisi',
-            'string' => ':attribute harus berupa teks',
-            'min' => ':attribute minimal :min karakter',
-            'max' => ':attribute maksimal :max karakter',
-        ];
-    }
 }

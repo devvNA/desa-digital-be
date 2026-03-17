@@ -10,9 +10,9 @@ interface HeadOfFamilyRepositoryInterface
 
     public function create(array $data);
 
-    // public function getById(string $id);
+    public function update(string $id, array $data);
 
-    // public function update(string $id, array $data);
+    public function getById(string $id);
 
-    // public function delete(string $id);
+    public function delete(string $id);
 }
