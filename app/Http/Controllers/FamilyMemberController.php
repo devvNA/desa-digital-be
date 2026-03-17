@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Requests\FamilyMemberStoreRequest;
+use App\Http\Requests\FamilyMemberUpdateRequest;
 use App\Http\Resources\FamilyMemberResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\FamilyMemberRepositoryInterface;
@@ -85,9 +86,25 @@ class FamilyMemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(FamilyMemberUpdateRequest $request, string $id)
     {
-        //
+        $request = $request->validated();
+
+
+
+        try {
+            $familyMember = $this->familyMemberRepository->getById($id);
+
+            if (!$familyMember) {
+                return ResponseHelper::jsonResponse(false, 'Data anggota keluarga tidak ditemukan', null, 404);
+            }
+
+            $familyMember = $this->familyMemberRepository->update($id, $request);
+
+            return ResponseHelper::jsonResponse(true, 'Data anggota keluarga berhasil diupdate', new FamilyMemberResource($familyMember), 200);
+        } catch (\Exception $e) {
+            return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
+        }
     }
 
     /**
@@ -95,6 +112,18 @@ class FamilyMemberController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $familyMember = $this->familyMemberRepository->getById($id);
+
+            if (!$familyMember) {
+                return ResponseHelper::jsonResponse(false, 'Data anggota keluarga tidak ditemukan', null, 404);
+            }
+
+            $familyMember = $this->familyMemberRepository->delete($id);
+
+            return ResponseHelper::jsonResponse(true, 'Data anggota keluarga berhasil dihapus', new FamilyMemberResource($familyMember), 200);
+        } catch (\Exception $e) {
+            return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
+        }
     }
 }
