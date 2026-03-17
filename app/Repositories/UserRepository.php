@@ -35,6 +35,12 @@ class UserRepository implements UserRepositoryInterface
         return $query->paginate($rowPerPage);
     }
 
+    public function getById(string $id)
+    {
+        $query = User::where('id', $id)->first();
+        return $query;
+    }
+
     public function create(array $data)
     {
         DB::beginTransaction();
