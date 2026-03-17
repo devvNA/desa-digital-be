@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('profile_picture')->nullable();
-            $table->bigInteger('identity_number');
+            $table->bigInteger('identity_number')->unique();
             $table->enum('gender', ['male', 'female']);
             $table->date('date_of_birth');
-            $table->string('phone_number');
+            $table->string('phone_number')->unique();
             $table->string('occupation');
             $table->enum('marital_status', ['single', 'married']);
 

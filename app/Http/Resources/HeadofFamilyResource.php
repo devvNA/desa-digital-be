@@ -16,7 +16,6 @@ class HeadofFamilyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'user' => new UserResource($this->user),
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
@@ -29,6 +28,7 @@ class HeadofFamilyResource extends JsonResource
             'phone_number' => $this->phone_number,
             'occupation' => $this->occupation,
             'marital_status' => $this->marital_status,
+            'family_member' => FamilyMemberResource::collection($this->whenLoaded('familyMembers')),
         ];
     }
 }

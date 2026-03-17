@@ -4,13 +4,14 @@ namespace App\Repositories;
 
 use App\Interfaces\FamilyMemberRepositoryInterface;
 use App\Models\FamilyMember;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class FamilyMemberRepository implements FamilyMemberRepositoryInterface
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = FamilyMember::where(function ($query) use ($search) {
+        $query = FamilyMember::with(['headOfFamily.user', 'user'])->where(function ($query) use ($search) {
 
             if ($search) {
                 $query->search($search);
@@ -39,33 +40,43 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = FamilyMember::where('id', $id)->first();
-        return $query;
+        $query = FamilyMember::with(['headOfFamily.user', 'user'])->where('id', $id);
+        return $query->first();
     }
 
 
-    // public function create(array $data)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $familyMember = new FamilyMember;
-    //         $familyMember->head_of_family_id = $data['head_of_family_id'];
-    //         $familyMember->name = $data['name'];
-    //         $familyMember->identity_number = $data['identity_number'];
-    //         $familyMember->gender = $data['gender'];
-    //         $familyMember->date_of_birth = $data['date_of_birth'];
-    //         $familyMember->phone_number = $data['phone_number'];
-    //         $familyMember->occupation = $data['occupation'];
-    //         $familyMember->marital_status = $data['marital_status'];
-    //         $familyMember->save();
+    public function create(array $data)
+    {
+        DB::beginTransaction();
+        try {
+            $userRepository = new UserRepository;
 
-    //         DB::commit();
-    //         return $familyMember;
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
+            $user = $userRepository->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+            ]);
+
+            $familyMember = new FamilyMember;
+            $familyMember->user_id = $user->id;
+            $familyMember->head_of_family_id = $data['head_of_family_id'];
+            $familyMember->profile_picture = $data['profile_picture']->store('asset/family-members', 'public');
+            $familyMember->identity_number = $data['identity_number'];
+            $familyMember->gender = $data['gender'];
+            $familyMember->date_of_birth = $data['date_of_birth'];
+            $familyMember->phone_number = $data['phone_number'];
+            $familyMember->occupation = $data['occupation'];
+            $familyMember->marital_status = $data['marital_status'];
+            $familyMember->relation = $data['relation'];
+            $familyMember->save();
+
+            DB::commit();
+            return FamilyMember::with(['headOfFamily.user', 'user'])->findOrFail($familyMember->id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
 
     // public function update(string $id, array $data)
     // {

@@ -19,14 +19,14 @@ class FamilyMemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'profile_picture' => $this->faker->imageUrl(),
             'identity_number' => $this->faker->unique()->numerify('################'),
-            'gender' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
-            'date_of_birth' => $this->faker->date(),
-            'phone_number' => $this->faker->phoneNumber,
-            'occupation' => $this->faker->jobTitle,
-            'marital_status' => $this->faker->randomElement(['Belum Menikah', 'Menikah', 'Cerai', 'Duda', 'Janda']),
-            'relation' => $this->faker->randomElement(['Suami', 'Istri', 'Anak', 'Orang Tua', 'Saudara', 'Lainnya']),
+            'gender' => $this->faker->randomElement(['male', 'female']),
+            'date_of_birth' => $this->faker->dateTimeBetween('-60 years', 'now'),
+            'phone_number' => $this->faker->unique()->phoneNumber(),
+            'occupation' => $this->faker->jobTitle(),
+            'marital_status' => $this->faker->randomElement(['single', 'married']),
+            'relation' => $this->faker->randomElement(['wife', 'child', 'husband']),
         ];
     }
 }

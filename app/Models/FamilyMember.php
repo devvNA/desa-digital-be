@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class FamilyMember extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'head_of_family_id',
@@ -26,18 +27,13 @@ class FamilyMember extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where(function ($query) use ($search) {
-            $query->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%");
-            })
-                ->orWhere('identity_number', 'like', "%{$search}%")
-                ->orWhere('gender', 'like', "%{$search}%")
-                ->orWhere('date_of_birth', 'like', "%{$search}%")
-                ->orWhere('phone_number', 'like', "%{$search}%")
-                ->orWhere('occupation', 'like', "%{$search}%")
-                ->orWhere('marital_status', 'like', "%{$search}%")
-                ->orWhere('relation', 'like', "%{$search}%");
-        });
+        return $query->whereHas('user', function ($query) use ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })->orWhere('identity_number', 'like', "%{$search}%")
+            ->orWhere('phone_number', 'like', "%{$search}%")
+            ->orWhere('occupation', 'like', "%{$search}%")
+            ->orWhere('marital_status', 'like', "%{$search}%");
     }
 
     public function headOfFamily()

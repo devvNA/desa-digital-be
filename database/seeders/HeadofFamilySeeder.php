@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\HeadOfFamily;
+use Database\Factories\FamilyMemberFactory;
 use Database\Factories\HeadofFamilyFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,8 +17,13 @@ class HeadofFamilySeeder extends Seeder
     public function run(): void
     {
         UserFactory::new()->count(15)->create()->each(function ($user) {
-            HeadofFamilyFactory::new()->count(1)->create([
+            $headOfFamily = HeadofFamilyFactory::new()->create([
                 'user_id' => $user->id,
+            ]);
+
+            FamilyMemberFactory::new()->count(5)->create([
+                'head_of_family_id' => $headOfFamily->id,
+                'user_id' => UserFactory::new()->create()->id,
             ]);
         });
     }

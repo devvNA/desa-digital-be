@@ -10,7 +10,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = HeadOfFamily::where(function ($query) use ($search) {
+        $query = HeadOfFamily::with(['user', 'familyMembers.user'])->where(function ($query) use ($search) {
 
             if ($search) {
                 $query->search($search);
@@ -39,7 +39,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = HeadOfFamily::where('id', $id)->first();
+        $query = HeadOfFamily::with(['user', 'familyMembers.user'])->where('id', $id)->first();
         return $query;
     }
 
