@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\UUID;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Development extends Model
 {
-    use UUID, SoftDeletes;
+    use HasUuids, SoftDeletes;
 
     protected $fillable = [
         'thumbnail',
@@ -30,5 +30,5 @@ class Development extends Model
     public function developmentApplicants()
     {
         return $this->hasMany(DevelopmentApplicant::class);
-    }   
+    }
 }

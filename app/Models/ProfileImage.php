@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\UUID;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProfileImage extends Model
 {
-    use UUID, SoftDeletes;
+    use HasUuids, SoftDeletes;
 
     protected $fillable = [
         'profile_id',

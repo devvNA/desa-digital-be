@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\UUID;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class SocialAssistanceRecipient extends Model
 {
-    use SoftDeletes, UUID;
+    use HasUuids, SoftDeletes;
 
-    protected $fillable = [ 
+    protected $fillable = [
         'social_assistance_id',
         'head_of_family_id',
         'bank',
-        'amount',     
+        'amount',
         'reason',
         'account_number',
         'proof',
