@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SocialAssistanceRecipient extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'social_assistance_id',
@@ -25,6 +26,16 @@ class SocialAssistanceRecipient extends Model
     protected $casts = [
         'amount' => 'decimal:2',
     ];
+
+    public function scopeSearch($query, ?string $search)
+    {
+        return $query->when($search, function ($query) use ($search) {
+            $query->whereHas('headOfFamily.user', function ($subQuery) use ($search) {
+                $subQuery->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        });
+    }
 
     public function socialAssistance()
     {

@@ -17,6 +17,8 @@ class SocialAssistanceRepository implements SocialAssistanceRepositoryInterface
             }
         });
 
+        $query->orderBy('created_at', 'desc');
+
         if ($limit) {
             $query->limit($limit);
         }

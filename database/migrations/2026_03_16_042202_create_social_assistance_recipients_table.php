@@ -20,11 +20,11 @@ return new class extends Migration
             $table->uuid('head_of_family_id');
             $table->foreign('head_of_family_id')->references('id')->on('head_of_families')->onDelete('cascade');
 
-            $table->enum('bank', ['bri', 'bni', 'bca', 'mandiri']);
+            $table->enum('bank', ['BRI', 'BNI', 'MANDIRI', 'BCA', 'PERMATA']);
             $table->decimal('amount', 15, 2);
             $table->longText('reason');
             $table->string('account_number');
-            $table->string('proof');
+            $table->string('proof')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
 
             $table->softDeletes();
