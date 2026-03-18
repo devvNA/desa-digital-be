@@ -26,6 +26,15 @@ class SocialAssistance extends Model
         'amount' => 'decimal:2',
     ];
 
+    public function scopeSearch($query, ?string $search)
+    {
+        return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('category', 'like', "%{$search}%")
+            ->orWhere('provider', 'like', "%{$search}%")
+            ->orWhere('amount', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%");
+    }
+
     public function socialAssistanceRecipient()
     {
         return $this->hasMany(SocialAssistanceRecipient::class);

@@ -60,7 +60,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $familyMember = new FamilyMember;
             $familyMember->user_id = $user->id;
             $familyMember->head_of_family_id = $data['head_of_family_id'];
-            $familyMember->profile_picture = $data['profile_picture']->store('asset/family-members', 'public');
+            $familyMember->profile_picture = $data['profile_picture']->store('assets/family-members', 'public');
             $familyMember->identity_number = $data['identity_number'];
             $familyMember->gender = $data['gender'];
             $familyMember->date_of_birth = $data['date_of_birth'];
@@ -85,7 +85,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $familyMember = FamilyMember::find($id);
 
             if (isset($data['profile_picture'])) {
-                $familyMember->profile_picture = $data['profile_picture']->store('asset/family-members', 'public');
+                $familyMember->profile_picture = $data['profile_picture']->store('assets/family-members', 'public');
             }
             $familyMember->identity_number = $data['identity_number'];
             $familyMember->gender = $data['gender'];
