@@ -27,12 +27,12 @@ class SocialAssistanceRecipient extends Model
         'amount' => 'decimal:2',
     ];
 
-    public function scopeSearch($query, ?string $search)
+    public function scopeSearch($query, $search)
     {
-        return $query->when($search, function ($query) use ($search) {
-            $query->whereHas('headOfFamily.user', function ($subQuery) use ($search) {
-                $subQuery->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+        return $query->whereHas('headOfFamily', function ($query) use ($search) {
+            $query->whereHas('user', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+                $query->orWhere('email', 'like', '%' . $search . '%');
             });
         });
     }

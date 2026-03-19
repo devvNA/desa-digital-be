@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->integer('quantity');
             $table->decimal('total_price', 15, 2);
-            $table->string('payment_status');
+            $table->enum('payment_status', ['pending', 'paid', 'canceled'])->default('pending');
 
             $table->softDeletes();
             $table->timestamps();
