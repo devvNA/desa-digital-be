@@ -90,8 +90,6 @@ class FamilyMemberController extends Controller
     {
         $request = $request->validated();
 
-
-
         try {
             $familyMember = $this->familyMemberRepository->getById($id);
 

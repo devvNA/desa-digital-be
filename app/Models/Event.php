@@ -25,6 +25,12 @@ class Event extends Model
         'price' => 'decimal:2',
     ];
 
+    public function scopeSearch($query, ?string $search)
+    {
+        return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%");
+    }
+
     public function eventParticipants()
     {
         return $this->hasMany(EventParticipant::class);

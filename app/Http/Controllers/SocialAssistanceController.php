@@ -118,7 +118,7 @@ class SocialAssistanceController extends Controller
 
             $socialAssistance = $this->socialAssistanceRepository->delete($id);
 
-            return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Dihapus', SocialAssistanceResource::make($socialAssistance), 200);
+            return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Dihapus', new SocialAssistanceResource($socialAssistance), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }

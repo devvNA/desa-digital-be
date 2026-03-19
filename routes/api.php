@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FamilyMemberController;
 use App\Http\Controllers\HeadofFamilyController;
 use App\Http\Controllers\SocialAssistanceController;
@@ -20,5 +21,7 @@ Route::apiResource('social-assistance', SocialAssistanceController::class);
 Route::get('social-assistance/all/paginated', [SocialAssistanceController::class, 'getAllPaginated']);
 
 Route::apiResource('social-assistance-recipient', SocialAssistanceRecipientController::class);
-// Route::post('social-assistance-recipient/{id}', [SocialAssistanceRecipientController::class, 'update']);
 Route::get('social-assistance-recipient/all/paginated', [SocialAssistanceRecipientController::class, 'getAllPaginated']);
+
+Route::apiResource('event', EventController::class);
+Route::get('event/all/paginated', [EventController::class, 'getAllPaginated']);
