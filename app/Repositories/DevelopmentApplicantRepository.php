@@ -2,15 +2,16 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\DevelopmentRepositoryInterface;
-use App\Models\Development;
+use App\Interfaces\DevelopmentApplicantRepositoryInterface;
+use App\Models\DevelopmentApplicant;
 use Illuminate\Support\Facades\DB;
 
-class DevelopmentRepository implements DevelopmentRepositoryInterface
+class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryInterface
 {
+
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = Development::where(function ($query) use ($search) {
+        $query = DevelopmentApplicant::where(function ($query) use ($search) {
             if ($search) {
                 $query->search($search);
             }
@@ -19,7 +20,7 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
         $query->orderBy('created_at', 'desc');
 
         if ($limit) {
-            $query->limit($limit);
+            $query->take($limit);
         }
 
         if ($execute) {
@@ -44,15 +45,12 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $development = new Development;
-            $development->thumbnail = $data['thumbnail']->store('assets/developments', 'public');
-            $development->name = $data['name'];
-            $development->description = $data['description'];
-            $development->person_in_charge = $data['person_in_charge'];
-            $development->start_date = $data['start_date'];
-            $development->end_date = $data['end_date'];
-            $development->amount = $data['amount'];
-            $development->status = $data['status'];
+            $development = new DevelopmentApplicant();
+            $development->development_id = $data['development_id'];
+            $development->user_id = $data['user_id'];
+            if (isset($data['status'])) {
+                $development->status = $data['status'];
+            }
 
             $development->save();
 
@@ -69,17 +67,12 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $development = Development::find($id);
-            if (isset($data['thumbnail'])) {
-                $development->thumbnail = $data['thumbnail']->store('assets/developments', 'public');
+            $development = DevelopmentApplicant::find($id);
+            $development->development_id = $data['development_id'];
+            $development->user_id = $data['user_id'];
+            if (isset($data['status'])) {
+                $development->status = $data['status'];
             }
-            $development->name = $data['name'];
-            $development->description = $data['description'];
-            $development->person_in_charge = $data['person_in_charge'];
-            $development->start_date = $data['start_date'];
-            $development->end_date = $data['end_date'];
-            $development->amount = $data['amount'];
-            $development->status = $data['status'];
 
             $development->save();
 
@@ -94,7 +87,7 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = Development::where('id', $id)->first();
+        $query = DevelopmentApplicant::where('id', $id)->first();
         return $query;
     }
 
@@ -102,7 +95,7 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $development = Development::find($id);
+            $development = DevelopmentApplicant::find($id);
             $development->delete();
             DB::commit();
             return $development;

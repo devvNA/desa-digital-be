@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('development_applicants', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('development_id')->constrained('developments')->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');  
+            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
 
             $table->softDeletes();
