@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\AuthRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthRepository implements AuthRepositoryInterface
 {
@@ -13,34 +14,45 @@ class AuthRepository implements AuthRepositoryInterface
         if (! Auth::attempt($data)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Email atau password tidak valid',
             ], 401);
         }
 
-        /** @var User $user */
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = User::where('email', $data['email'])->first();
+
+        if (! $user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan',
+            ], 404);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'message' => 'Login success',
+            'message' => 'Login berhasil',
             'token' => $token,
         ], 200);
     }
 
     public function logout()
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = Auth::guard('sanctum')->user();
 
-        if (! $user || ! $user->currentAccessToken()) {
+        /** @var PersonalAccessToken|null $accessToken */
+        $accessToken = $user?->currentAccessToken();
+
+        if (! $user || ! $accessToken) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
             ], 401);
         }
 
-        $user->currentAccessToken()->delete();
+        $accessToken->delete();
 
         return response()->json([
             'success' => true,
@@ -50,11 +62,12 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function me()
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = Auth::guard('sanctum')->user();
 
         if (! $user) {
             return response()->json([
+                'success' => false,
                 'message' => 'You are not logged in',
             ], 401);
         }
@@ -65,6 +78,7 @@ class AuthRepository implements AuthRepositoryInterface
         $role = optional($user->roles->first())->name;
 
         return response()->json([
+            'success' => true,
             'message' => 'User data',
             'data' => [
                 'id' => $user->id,
@@ -73,6 +87,6 @@ class AuthRepository implements AuthRepositoryInterface
                 'permissions' => $permissions,
                 'role' => $role,
             ],
-        ]);
+        ], 200);
     }
 }
