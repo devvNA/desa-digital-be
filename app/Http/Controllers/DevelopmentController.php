@@ -44,7 +44,7 @@ class DevelopmentController extends Controller
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
-            return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', PaginateResourse::make($users, DevelopmentResource::class), 200);
+            return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', new PaginateResourse($users, DevelopmentResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }
@@ -59,7 +59,7 @@ class DevelopmentController extends Controller
 
         try {
             $development = $this->developmentRepository->create($request);
-            return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil ditambahkan', DevelopmentResource::make($development), 201);
+            return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil ditambahkan', new DevelopmentResource($development), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }
