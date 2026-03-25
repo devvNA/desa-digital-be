@@ -8,16 +8,29 @@ use App\Http\Requests\DevelopmentUpdateRequest;
 use App\Http\Resources\DevelopmentResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\DevelopmentRepositoryInterface;
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class DevelopmentController extends Controller
+class DevelopmentController extends Controller implements HasMiddleware
 {
     protected DevelopmentRepositoryInterface $developmentRepository;
 
     public function __construct(DevelopmentRepositoryInterface $developmentRepository)
     {
         $this->developmentRepository = $developmentRepository;
+    }
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(PermissionMiddleware::using('development-list|development-create|development-edit|development-delete'), ['index', 'getAllPaginated', 'show']),
+            new Middleware(PermissionMiddleware::using('development-create'), ['store']),
+            new Middleware(PermissionMiddleware::using('development-edit'), ['update']),
+            new Middleware(PermissionMiddleware::using('development-delete'), ['destroy']),
+        ];
     }
     /**
      * Display a listing of the resource.

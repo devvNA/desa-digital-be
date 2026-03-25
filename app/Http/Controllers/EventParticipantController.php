@@ -8,10 +8,13 @@ use App\Http\Requests\EventParticipantUpdateRequest;
 use App\Http\Resources\EventParticipantResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\EventParticipantRepositoryInterface;
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class EventParticipantController extends Controller
+class EventParticipantController extends Controller implements HasMiddleware
 {
 
     protected EventParticipantRepositoryInterface $eventParticipantRepository;
@@ -19,6 +22,16 @@ class EventParticipantController extends Controller
     public function __construct(EventParticipantRepositoryInterface $eventParticipantRepository)
     {
         $this->eventParticipantRepository = $eventParticipantRepository;
+    }
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(PermissionMiddleware::using('event-participant-list|event-participant-create|event-participant-edit|event-participant-delete'), ['index', 'getAllPaginated', 'show']),
+            new Middleware(PermissionMiddleware::using('event-participant-create'), ['store']),
+            new Middleware(PermissionMiddleware::using('event-participant-edit'), ['update']),
+            new Middleware(PermissionMiddleware::using('event-participant-delete'), ['destroy']),
+        ];
     }
     /**
      * Display a listing of the resource.

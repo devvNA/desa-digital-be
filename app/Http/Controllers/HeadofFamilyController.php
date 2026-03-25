@@ -10,15 +10,28 @@ use App\Http\Resources\PaginateResourse;
 use App\Interfaces\HeadOfFamilyRepositoryInterface;
 use Illuminate\Http\JsonResponse as HttpJsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class HeadofFamilyController extends Controller
+class HeadofFamilyController extends Controller implements HasMiddleware
 {
     private HeadOfFamilyRepositoryInterface $headOfFamilyRepository;
 
     public function __construct(HeadOfFamilyRepositoryInterface $headOfFamilyRepository)
     {
         $this->headOfFamilyRepository = $headOfFamilyRepository;
+    }
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(PermissionMiddleware::using('head-of-family-list|head-of-family-create|head-of-family-edit|head-of-family-delete'), ['index', 'getAllPaginated', 'show']),
+            new Middleware(PermissionMiddleware::using('head-of-family-create'), ['store']),
+            new Middleware(PermissionMiddleware::using('head-of-family-edit'), ['update']),
+            new Middleware(PermissionMiddleware::using('head-of-family-delete'), ['destroy']),
+        ];
     }
     /**
      * Display a listing of the resource.

@@ -8,15 +8,28 @@ use App\Http\Requests\FamilyMemberUpdateRequest;
 use App\Http\Resources\FamilyMemberResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\FamilyMemberRepositoryInterface;
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
-class FamilyMemberController extends Controller
+class FamilyMemberController extends Controller implements HasMiddleware
 {
     private FamilyMemberRepositoryInterface $familyMemberRepository;
 
     public function __construct(FamilyMemberRepositoryInterface $familyMemberRepository)
     {
         $this->familyMemberRepository = $familyMemberRepository;
+    }
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(PermissionMiddleware::using('family-member-list|family-member-create|family-member-edit|family-member-delete'), ['index', 'getAllPaginated', 'show']),
+            new Middleware(PermissionMiddleware::using('family-member-create'), ['store']),
+            new Middleware(PermissionMiddleware::using('family-member-edit'), ['update']),
+            new Middleware(PermissionMiddleware::using('family-member-delete'), ['destroy']),
+        ];
     }
 
     /**
