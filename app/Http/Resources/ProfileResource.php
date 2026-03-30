@@ -19,9 +19,9 @@ class ProfileResource extends JsonResource
             'name' => $this->name,
             'about' => $this->about,
             'headman' => $this->headman,
-            'people' => (int)(string) $this->people,
-            'agricultural_area' => (float)(string) $this->agricultural_area,
-            'total_area' => (float)(string) $this->total_area,
+            'people' => (int) (string) $this->people,
+            'agricultural_area' => (float) (string) $this->agricultural_area,
+            'total_area' => (float) (string) $this->total_area,
             'profile_images' => ProfileImageResource::collection($this->profileImages),
         ];
     }

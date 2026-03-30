@@ -20,8 +20,7 @@ class HeadofFamilyFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'profile_picture' => $this->faker->imageUrl(),
-            // 'profile_picture' => $this->faker->image('public/storage/head_of_families', 640, 480, 'people', false),
+            'profile_picture' => $this->faker->imageUrl(300, 300, 'people'),
             'identity_number' => $this->faker->unique()->numerify('################'),
             'gender' => $this->faker->randomElement(['male', 'female']),
             'date_of_birth' => $this->faker->dateTimeBetween('-60 years', 'now'),

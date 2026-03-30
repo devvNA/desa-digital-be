@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -10,63 +9,63 @@ class PermissionSeeder extends Seeder
 {
     private $permission = [
         'dashboard' => [
-            'menu'
+            'menu',
         ],
         'head-of-family' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'family-member' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'social-assistance' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'social-assistance-recipient' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'event' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'event-participant' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'development' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'development-applicant' => [
             'menu',
             'list',
             'create',
             'edit',
-            'delete'
+            'delete',
         ],
         'profile' => [
             'menu',
@@ -83,7 +82,7 @@ class PermissionSeeder extends Seeder
         foreach ($this->permission as $key => $value) {
             foreach ($value as $permission) {
                 Permission::firstOrCreate([
-                    'name' => $key . '-' . $permission,
+                    'name' => $key.'-'.$permission,
                     'guard_name' => 'sanctum',
                 ]);
             }

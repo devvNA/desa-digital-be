@@ -39,6 +39,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
     {
         try {
             $familyMember = $this->familyMemberRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data anggota keluarga berhasil diambil', FamilyMemberResource::collection($familyMember), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -49,7 +50,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -57,6 +58,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data anggota keluarga berhasil diambil', PaginateResourse::make($users, FamilyMemberResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -72,6 +74,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
 
         try {
             $familyMember = $this->familyMemberRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data anggota keluarga berhasil ditambahkan', new FamilyMemberResource($familyMember), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -86,7 +89,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
         try {
             $familyMember = $this->familyMemberRepository->getById($id);
 
-            if (!$familyMember) {
+            if (! $familyMember) {
                 return ResponseHelper::jsonResponse(false, 'Data anggota keluarga tidak ditemukan', null, 404);
             }
 
@@ -106,7 +109,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
         try {
             $familyMember = $this->familyMemberRepository->getById($id);
 
-            if (!$familyMember) {
+            if (! $familyMember) {
                 return ResponseHelper::jsonResponse(false, 'Data anggota keluarga tidak ditemukan', null, 404);
             }
 
@@ -126,7 +129,7 @@ class FamilyMemberController extends Controller implements HasMiddleware
         try {
             $familyMember = $this->familyMemberRepository->getById($id);
 
-            if (!$familyMember) {
+            if (! $familyMember) {
                 return ResponseHelper::jsonResponse(false, 'Data anggota keluarga tidak ditemukan', null, 404);
             }
 

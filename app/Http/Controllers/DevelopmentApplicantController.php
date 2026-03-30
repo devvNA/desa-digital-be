@@ -25,13 +25,14 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-        return [    
+        return [
             new Middleware(PermissionMiddleware::using('development-applicant-list|development-applicant-create|development-applicant-edit|development-applicant-delete'), ['index', 'getAllPaginated', 'show']),
             new Middleware(PermissionMiddleware::using('development-applicant-create'), ['store']),
             new Middleware(PermissionMiddleware::using('development-applicant-edit'), ['update']),
             new Middleware(PermissionMiddleware::using('development-applicant-delete'), ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,6 +41,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
 
         try {
             $development = $this->developmentApplicantRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data Pendaftar Pembangunan berhasil diambil', DevelopmentApplicantResource::collection($development), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -50,7 +52,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -58,6 +60,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data Pendaftar Pembangunan berhasil diambil', PaginateResourse::make($users, DevelopmentApplicantResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -73,6 +76,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
 
         try {
             $development = $this->developmentApplicantRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data Pendaftar Pembangunan berhasil ditambahkan', DevelopmentApplicantResource::make($development), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -87,7 +91,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
         try {
             $development = $this->developmentApplicantRepository->getById($id);
 
-            if (!$development) {
+            if (! $development) {
                 return ResponseHelper::jsonResponse(false, 'Data Pendaftar Pembangunan tidak ditemukan', null, 404);
             }
 
@@ -106,6 +110,7 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
 
         try {
             $development = $this->developmentApplicantRepository->update($id, $request);
+
             return ResponseHelper::jsonResponse(true, 'Data Pendaftar Pembangunan berhasil diupdate', DevelopmentApplicantResource::make($development), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -119,16 +124,17 @@ class DevelopmentApplicantController extends Controller implements HasMiddleware
     {
         try {
             $development = $this->developmentApplicantRepository->getById($id);
-            if (!$development) {
+            if (! $development) {
                 return ResponseHelper::jsonResponse(false, 'Data Pendaftar Pembangunan tidak ditemukan', null, 404);
             }
             $development = $this->developmentApplicantRepository->delete($id);
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Data Pendaftar Pembangunan Berhasil Dihapus',
                 'data' => [
                     'id' => $id,
-                ]
+                ],
             ], 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);

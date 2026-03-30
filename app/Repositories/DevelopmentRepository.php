@@ -95,6 +95,7 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
     public function getById(string $id)
     {
         $query = Development::where('id', $id)->first();
+
         return $query;
     }
 
@@ -105,6 +106,7 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
             $development = Development::find($id);
             $development->delete();
             DB::commit();
+
             return $development;
         } catch (\Exception $e) {
             DB::rollBack();

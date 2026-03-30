@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryInterface
 {
-
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
         $query = DevelopmentApplicant::where(function ($query) use ($search) {
@@ -45,7 +44,7 @@ class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryIn
     {
         DB::beginTransaction();
         try {
-            $development = new DevelopmentApplicant();
+            $development = new DevelopmentApplicant;
             $development->development_id = $data['development_id'];
             $development->user_id = $data['user_id'];
             if (isset($data['status'])) {
@@ -88,6 +87,7 @@ class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryIn
     public function getById(string $id)
     {
         $query = DevelopmentApplicant::where('id', $id)->first();
+
         return $query;
     }
 
@@ -98,6 +98,7 @@ class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryIn
             $development = DevelopmentApplicant::find($id);
             $development->delete();
             DB::commit();
+
             return $development;
         } catch (\Exception $e) {
             DB::rollBack();

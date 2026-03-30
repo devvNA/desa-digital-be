@@ -47,7 +47,7 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
         try {
             $event = Event::where('id', $data['event_id'])->first();
 
-            $eventParticipant = new EventParticipant();
+            $eventParticipant = new EventParticipant;
             $eventParticipant->event_id = $data['event_id'];
             $eventParticipant->head_of_family_id = $data['head_of_family_id'];
             $eventParticipant->quantity = $data['quantity'];
@@ -97,6 +97,7 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
     public function getById(string $id)
     {
         $query = EventParticipant::where('id', $id)->first();
+
         return $query;
     }
 

@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialAssistanceRecipient extends Model
 {
-    use HasUuids, SoftDeletes, HasFactory;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'social_assistance_id',
@@ -31,8 +30,8 @@ class SocialAssistanceRecipient extends Model
     {
         return $query->whereHas('headOfFamily', function ($query) use ($search) {
             $query->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-                $query->orWhere('email', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhere('email', 'like', '%'.$search.'%');
             });
         });
     }

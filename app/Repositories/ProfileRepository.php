@@ -22,7 +22,7 @@ class ProfileRepository implements ProfileRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $profile = new Profile();
+            $profile = new Profile;
             $profile->thumbnail = $data['thumbnail']->store('assets/profile', 'public');
             $profile->name = $data['name'];
             $profile->about = $data['about'];
@@ -42,7 +42,7 @@ class ProfileRepository implements ProfileRepositoryInterface
 
             DB::commit();
 
-            return $profile ;
+            return $profile;
         } catch (\Exception $e) {
             DB::rollBack();
             throw new \Exception($e->getMessage());

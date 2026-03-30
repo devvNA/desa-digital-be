@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
-use App\Models\EventParticipant;
 use App\Models\HeadOfFamily;
 use Database\Factories\EventParticipantFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class EventParticipantSeeder extends Seeder

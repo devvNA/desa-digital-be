@@ -31,6 +31,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
             new Middleware(PermissionMiddleware::using('social-assistance-delete'), ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,6 +39,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
     {
         try {
             $socialAssistances = $this->socialAssistanceRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Diambil', SocialAssistanceResource::collection($socialAssistances), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -48,7 +50,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -56,12 +58,12 @@ class SocialAssistanceController extends Controller implements HasMiddleware
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Diambil', PaginateResourse::make($socialAssistances, SocialAssistanceResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -72,6 +74,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
 
         try {
             $socialAssistance = $this->socialAssistanceRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Ditambahkan', SocialAssistanceResource::make($socialAssistance), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -85,9 +88,10 @@ class SocialAssistanceController extends Controller implements HasMiddleware
     {
         try {
             $socialAssistance = $this->socialAssistanceRepository->getById($id);
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Bantuan Sosial Tidak Ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Diambil', SocialAssistanceResource::make($socialAssistance), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -104,7 +108,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
         try {
             $socialAssistance = $this->socialAssistanceRepository->getById($id);
 
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Bantuan Sosial Tidak Ditemukan', null, 404);
             }
 
@@ -124,7 +128,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
         try {
             $socialAssistance = $this->socialAssistanceRepository->getById($id);
 
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Bantuan Sosial Tidak Ditemukan', null, 404);
             }
 

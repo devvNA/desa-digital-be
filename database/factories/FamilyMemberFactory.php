@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\FamilyMember;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +18,7 @@ class FamilyMemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'profile_picture' => $this->faker->imageUrl(),
+            'profile_picture' => $this->faker->imageUrl(300, 300, 'people'),
             'identity_number' => $this->faker->unique()->numerify('################'),
             'gender' => $this->faker->randomElement(['male', 'female']),
             'date_of_birth' => $this->faker->dateTimeBetween('-60 years', 'now'),

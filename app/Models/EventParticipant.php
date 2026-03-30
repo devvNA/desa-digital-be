@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -28,8 +28,8 @@ class EventParticipant extends Model
     {
         return $query->whereHas('headOfFamily', function ($query) use ($search) {
             $query->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-                $query->orWhere('email', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhere('email', 'like', '%'.$search.'%');
             });
         });
     }

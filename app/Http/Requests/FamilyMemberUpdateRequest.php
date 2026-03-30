@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\FamilyMember;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FamilyMemberUpdateRequest extends FormRequest
@@ -17,7 +16,7 @@ class FamilyMemberUpdateRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:users,email,' . $userId,
+            'email' => 'nullable|string|email|max:255|unique:users,email,'.$userId,
             'password' => 'nullable|string|min:8',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'identity_number' => 'required|string|max:255',

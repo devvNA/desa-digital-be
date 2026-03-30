@@ -32,6 +32,7 @@ class DevelopmentController extends Controller implements HasMiddleware
             new Middleware(PermissionMiddleware::using('development-delete'), ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -39,6 +40,7 @@ class DevelopmentController extends Controller implements HasMiddleware
     {
         try {
             $development = $this->developmentRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', DevelopmentResource::collection($development), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -49,7 +51,7 @@ class DevelopmentController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -57,6 +59,7 @@ class DevelopmentController extends Controller implements HasMiddleware
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', new PaginateResourse($users, DevelopmentResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -72,6 +75,7 @@ class DevelopmentController extends Controller implements HasMiddleware
 
         try {
             $development = $this->developmentRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil ditambahkan', new DevelopmentResource($development), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -86,7 +90,7 @@ class DevelopmentController extends Controller implements HasMiddleware
         try {
             $development = $this->developmentRepository->getById($id);
 
-            if (!$development) {
+            if (! $development) {
                 return ResponseHelper::jsonResponse(false, 'Data Pembangunan tidak ditemukan', null, 404);
             }
 
@@ -105,6 +109,7 @@ class DevelopmentController extends Controller implements HasMiddleware
 
         try {
             $development = $this->developmentRepository->update($id, $request);
+
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diupdate', DevelopmentResource::make($development), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -118,16 +123,17 @@ class DevelopmentController extends Controller implements HasMiddleware
     {
         try {
             $development = $this->developmentRepository->getById($id);
-            if (!$development) {
+            if (! $development) {
                 return ResponseHelper::jsonResponse(false, 'Data Pembangunan tidak ditemukan', null, 404);
             }
             $development = $this->developmentRepository->delete($id);
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Data Pembangunan Berhasil Dihapus',
                 'data' => [
                     'id' => $id,
-                ]
+                ],
             ], 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);

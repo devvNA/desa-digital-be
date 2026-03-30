@@ -101,6 +101,7 @@ class EventRepository implements EventRepositoryInterface
     public function getById(string $id)
     {
         $query = Event::where('id', $id)->first();
+
         return $query;
     }
 

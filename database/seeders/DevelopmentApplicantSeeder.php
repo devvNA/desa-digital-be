@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Development;
-use App\Models\DevelopmentApplicant;
 use App\Models\User;
 use Database\Factories\DevelopmentApplicantFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DevelopmentApplicantSeeder extends Seeder
@@ -16,7 +14,7 @@ class DevelopmentApplicantSeeder extends Seeder
      */
     public function run(): void
     {
-        $development =  Development::all();
+        $development = Development::all();
         $users = User::all();
 
         foreach ($development as $development) {

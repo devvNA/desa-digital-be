@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class PaginateResourse extends JsonResource
 {
     public $resourceClass;
+
     /**
      * Transform the resource into an array.
      *

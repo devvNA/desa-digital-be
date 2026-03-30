@@ -38,6 +38,7 @@ class UserRepository implements UserRepositoryInterface
     public function getById(string $id)
     {
         $query = User::where('id', $id)->first();
+
         return $query;
     }
 
@@ -52,6 +53,7 @@ class UserRepository implements UserRepositoryInterface
             $user->save();
 
             DB::commit();
+
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -67,11 +69,12 @@ class UserRepository implements UserRepositoryInterface
             $user->name = $data['name'];
             if (isset($data['password'])) {
                 $user->password = bcrypt($data['password']);
-            };
+            }
 
             $user->save();
 
             DB::commit();
+
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();

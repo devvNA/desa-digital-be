@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profile_images', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            
+
             $table->foreignUuid('profile_id')->constrained('profiles')->onDelete('cascade');
 
             $table->string('image');

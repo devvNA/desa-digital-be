@@ -19,7 +19,7 @@ class SocialAssistanceFactory extends Factory
     {
         return [
             'thumbnail' => $this->faker->imageUrl(),
-            'name' => $this->faker->randomElement(['Bantuan Pangan', 'Bantuan Tunai', 'Bantuan Bahan Bakar Bersubsidi', 'Bantuan Kesehatan']) . ' ' . $this->faker->company(),
+            'name' => $this->faker->randomElement(['Bantuan Pangan', 'Bantuan Tunai', 'Bantuan Bahan Bakar Bersubsidi', 'Bantuan Kesehatan']).' '.$this->faker->company(),
             'category' => $this->faker->randomElement(['staple', 'cash', 'subsidized fuel', 'health']),
             'amount' => $this->faker->randomFloat(2, 100000, 1000000),
             'provider' => $this->faker->company(),

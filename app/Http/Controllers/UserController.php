@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     private UserRepositoryInterface $userRepository;
 
     public function __construct(UserRepositoryInterface $userRepository)
@@ -27,6 +26,7 @@ class UserController extends Controller
     {
         try {
             $users = $this->userRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Users fetched successfully', UserResource::collection($users), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -45,6 +45,7 @@ class UserController extends Controller
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Users fetched successfully', PaginateResourse::make($users, UserResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -60,6 +61,7 @@ class UserController extends Controller
 
         try {
             $user = $this->userRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'User created successfully', new UserResource($user), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -73,9 +75,10 @@ class UserController extends Controller
     {
         try {
             $user = $this->userRepository->getById($id);
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'User not found', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'User fetched successfully', new UserResource($user), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -92,7 +95,7 @@ class UserController extends Controller
         try {
             $user = $this->userRepository->getById($id);
 
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'User not found', null, 404);
             }
 
@@ -112,7 +115,7 @@ class UserController extends Controller
         try {
             $user = $this->userRepository->getById($id);
 
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'User not found', null, 404);
             }
 

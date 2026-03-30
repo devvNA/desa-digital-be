@@ -41,9 +41,9 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
     public function getById(string $id)
     {
         $query = FamilyMember::with(['headOfFamily.user', 'headOfFamily.familyMembers.user', 'user'])->where('id', $id);
+
         return $query->first();
     }
-
 
     public function create(array $data)
     {
@@ -71,8 +71,9 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $familyMember->save();
 
             DB::commit();
+
             return FamilyMember::with(['headOfFamily.user', 'headOfFamily.familyMembers.user', 'user'])->findOrFail($familyMember->id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
@@ -96,7 +97,7 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $familyMember->relation = $data['relation'];
             $familyMember->save();
 
-            $userRepository = new UserRepository();
+            $userRepository = new UserRepository;
 
             $userRepository->update($familyMember->user_id, [
                 'name' => $data['name'],
@@ -105,10 +106,11 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             ]);
 
             DB::commit();
+
             return $familyMember;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -122,9 +124,9 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             DB::commit();
 
             return $familyMember;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }

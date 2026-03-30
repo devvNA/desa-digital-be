@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FamilyMember extends Model
 {
@@ -22,7 +21,7 @@ class FamilyMember extends Model
         'phone_number',
         'occupation',
         'marital_status',
-        'relation'
+        'relation',
     ];
 
     public function scopeSearch($query, $search)

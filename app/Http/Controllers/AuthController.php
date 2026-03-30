@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginStoreRequest;
 use App\Interfaces\AuthRepositoryInterface;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {

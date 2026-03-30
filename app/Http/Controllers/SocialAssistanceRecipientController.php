@@ -7,7 +7,6 @@ use App\Http\Requests\SocialAssistanceRecipientStoreRequest;
 use App\Http\Requests\SocialAssistanceRecipientUpdateRequest;
 use App\Http\Resources\PaginateResourse;
 use App\Http\Resources\SocialAssistanceRecipientResource;
-use App\Http\Resources\SocialAssistanceResource;
 use App\Interfaces\SocialAssistanceRecipientRepositoryInterface;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
@@ -32,6 +31,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
             new Middleware(PermissionMiddleware::using('social-assistance-recipient-delete'), ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -39,6 +39,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
     {
         try {
             $socialAssistances = $this->socialAssistanceRecipientRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data Penerima Bantuan Sosial Berhasil Diambil', SocialAssistanceRecipientResource::collection($socialAssistances), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -49,7 +50,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -57,12 +58,12 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data Penerima Bantuan Sosial Berhasil Diambil', PaginateResourse::make($socialAssistances, SocialAssistanceRecipientResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -73,6 +74,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
 
         try {
             $socialAssistance = $this->socialAssistanceRecipientRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data Penerima Bantuan Sosial Berhasil Ditambahkan', SocialAssistanceRecipientResource::make($socialAssistance), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -86,9 +88,10 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
     {
         try {
             $socialAssistance = $this->socialAssistanceRecipientRepository->getById($id);
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Penerima Bantuan Sosial Tidak Ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data Penerima Bantuan Sosial Berhasil Diambil', SocialAssistanceRecipientResource::make($socialAssistance), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -105,7 +108,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
         try {
             $socialAssistance = $this->socialAssistanceRecipientRepository->getById($id);
 
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Penerima Bantuan Sosial Tidak Ditemukan', null, 404);
             }
 
@@ -125,7 +128,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
         try {
             $socialAssistance = $this->socialAssistanceRecipientRepository->getById($id);
 
-            if (!$socialAssistance) {
+            if (! $socialAssistance) {
                 return ResponseHelper::jsonResponse(false, 'Data Penerima Bantuan Sosial Tidak Ditemukan', null, 404);
             }
 

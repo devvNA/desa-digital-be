@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\SocialAssistance;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SocialAssistanceUpdateRequest extends FormRequest

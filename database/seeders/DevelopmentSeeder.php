@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Database\Factories\DevelopmentFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DevelopmentSeeder extends Seeder
@@ -13,6 +12,6 @@ class DevelopmentSeeder extends Seeder
      */
     public function run(): void
     {
-        DevelopmentFactory::new()->count(5)->create();
+        DevelopmentFactory::new()->count(10)->create();
     }
 }

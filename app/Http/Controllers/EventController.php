@@ -31,6 +31,7 @@ class EventController extends Controller implements HasMiddleware
             new Middleware(PermissionMiddleware::using('event-delete'), ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,6 +39,7 @@ class EventController extends Controller implements HasMiddleware
     {
         try {
             $event = $this->eventRepository->getAll($request->search, $request->limit, true);
+
             return ResponseHelper::jsonResponse(true, 'Data event berhasil diambil', EventResource::collection($event), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -48,7 +50,7 @@ class EventController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
-            'row_per_page' => 'required|integer'
+            'row_per_page' => 'required|integer',
         ]);
 
         try {
@@ -56,12 +58,12 @@ class EventController extends Controller implements HasMiddleware
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
+
             return ResponseHelper::jsonResponse(true, 'Data event berhasil diambil', PaginateResourse::make($users, EventResource::class), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -72,6 +74,7 @@ class EventController extends Controller implements HasMiddleware
 
         try {
             $event = $this->eventRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data event berhasil ditambahkan', EventResource::make($event), 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
@@ -86,7 +89,7 @@ class EventController extends Controller implements HasMiddleware
         try {
             $event = $this->eventRepository->getById($id);
 
-            if (!$event) {
+            if (! $event) {
                 return ResponseHelper::jsonResponse(false, 'Data event tidak ditemukan', null, 404);
             }
 
@@ -106,7 +109,7 @@ class EventController extends Controller implements HasMiddleware
         try {
             $event = $this->eventRepository->getById($id);
 
-            if (!$event) {
+            if (! $event) {
                 return ResponseHelper::jsonResponse(false, 'Data event tidak ditemukan', null, 404);
             }
 
@@ -125,10 +128,11 @@ class EventController extends Controller implements HasMiddleware
     {
         try {
             $event = $this->eventRepository->getById($id);
-            if (!$event) {
+            if (! $event) {
                 return ResponseHelper::jsonResponse(false, 'Data event tidak ditemukan', null, 404);
             }
             $event = $this->eventRepository->delete($id);
+
             return ResponseHelper::jsonResponse(true, 'Data event berhasil dihapus', new EventResource($event), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);

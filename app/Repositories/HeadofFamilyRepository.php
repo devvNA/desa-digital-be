@@ -40,6 +40,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
     public function getById(string $id)
     {
         $query = HeadOfFamily::with(['user', 'familyMembers.user'])->where('id', $id)->first();
+
         return $query;
     }
 
@@ -47,7 +48,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $userRepository = new UserRepository();
+            $userRepository = new UserRepository;
             $user = $userRepository->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -66,6 +67,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
             $headOfFamily->save();
 
             DB::commit();
+
             return $headOfFamily;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -91,7 +93,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
 
             $headOfFamily->save();
 
-            $userRepository = new UserRepository();
+            $userRepository = new UserRepository;
             $userRepository->update($headOfFamily->user_id, [
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -99,6 +101,7 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
             ]);
 
             DB::commit();
+
             return $headOfFamily;
         } catch (\Exception $e) {
             DB::rollBack();

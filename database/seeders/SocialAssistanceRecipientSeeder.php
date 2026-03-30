@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\HeadOfFamily;
 use App\Models\SocialAssistance;
 use App\Models\SocialAssistanceRecipient;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SocialAssistanceRecipientSeeder extends Seeder

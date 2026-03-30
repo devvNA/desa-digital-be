@@ -19,10 +19,10 @@ class HeadofFamilyStoreRequest extends FormRequest
             'email' => 'required|string|email|unique:users,email|max:255',
             'password' => 'required|string|min:8',
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'identity_number' => 'required|string|max:255',
+            'identity_number' => 'required|string|max:255|unique:head_of_families,identity_number',
             'gender' => 'required|string|in:male,female',
             'date_of_birth' => 'required|date',
-            'phone_number' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:255|unique:head_of_families,phone_number',
             'occupation' => 'required|string|max:255',
             'marital_status' => 'required|string|in:single,married',
         ];
