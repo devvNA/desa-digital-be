@@ -8,7 +8,7 @@ use App\Http\Requests\EventUpdateRequest;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\EventRepositoryInterface;
-use GuzzleHttp\Middleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;

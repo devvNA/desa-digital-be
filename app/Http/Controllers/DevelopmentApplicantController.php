@@ -8,7 +8,7 @@ use App\Http\Requests\DevelopmentApplicantUpdateRequest;
 use App\Http\Resources\DevelopmentApplicantResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\DevelopmentApplicantRepositoryInterface;
-use GuzzleHttp\Middleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;

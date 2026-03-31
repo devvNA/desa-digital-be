@@ -10,12 +10,12 @@ class SocialAssistanceRepository implements SocialAssistanceRepositoryInterface
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = SocialAssistance::where(function ($query) use ($search) {
-
-            if ($search) {
-                $query->search($search);
-            }
-        });
+        $query = SocialAssistance::with('socialAssistanceRecipient')
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->search($search);
+                }
+            });
 
         $query->orderBy('created_at', 'desc');
 
@@ -43,9 +43,9 @@ class SocialAssistanceRepository implements SocialAssistanceRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = SocialAssistance::where('id', $id);
-
-        return $query->first();
+        return SocialAssistance::with('socialAssistanceRecipient')
+            ->where('id', $id)
+            ->first();
     }
 
     public function create(array $data)

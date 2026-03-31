@@ -23,6 +23,7 @@ class SocialAssistanceRecipientFactory extends Factory
             'bank' => $this->faker->randomElement(['BRI', 'BNI', 'MANDIRI', 'BCA', 'PERMATA']),
             'account_number' => $this->faker->unique()->bankAccountNumber(),
             'proof' => $this->faker->imageUrl(),
+            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
         ];
     }
 }

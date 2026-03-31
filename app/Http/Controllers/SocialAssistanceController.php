@@ -8,7 +8,7 @@ use App\Http\Requests\SocialAssistanceUpdateRequest;
 use App\Http\Resources\PaginateResourse;
 use App\Http\Resources\SocialAssistanceResource;
 use App\Interfaces\SocialAssistanceRepositoryInterface;
-use GuzzleHttp\Middleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;

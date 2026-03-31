@@ -14,13 +14,14 @@ class SocialAssistanceRecipientSeeder extends Seeder
      */
     public function run(): void
     {
-        $socialAssistance = SocialAssistance::all();
-        $headofFamilies = HeadOfFamily::all();
+        $socialAssistances = SocialAssistance::all();
+        $headOfFamilies = HeadOfFamily::all();
 
-        foreach ($socialAssistance as $socialAssistance) {
-            foreach ($headofFamilies as $headofFamily) {
+        foreach ($socialAssistances as $socialAssistance) {
+            $recipients = $headOfFamilies->random(min(3, $headOfFamilies->count()));
+            foreach ($recipients as $headOfFamily) {
                 SocialAssistanceRecipient::factory()->create([
-                    'head_of_family_id' => $headofFamily->id,
+                    'head_of_family_id' => $headOfFamily->id,
                     'social_assistance_id' => $socialAssistance->id,
                 ]);
             }
