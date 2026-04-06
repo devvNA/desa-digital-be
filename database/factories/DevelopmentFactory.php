@@ -19,7 +19,7 @@ class DevelopmentFactory extends Factory
     {
         return [
             'thumbnail' => $this->faker->imageUrl(),
-            'name' => $this->faker->randomElement(['Pembangunan Jalan', 'Pembangunan Jembatan', 'Pembangunan Gedung Olahraga', 'Pembangunan Taman', 'Pembangunan Toilet']).' '.$this->faker->city(),
+            'name' => $this->faker->randomElement(['Pembangunan Jalan', 'Pembangunan Jembatan', 'Pembangunan Gedung Olahraga', 'Pembangunan Taman', 'Pembangunan Toilet']) . ' ' . $this->faker->city(),
             'description' => $this->faker->paragraph(),
             'person_in_charge' => $this->faker->name(),
             'start_date' => $this->faker->dateTimeBetween('-1 year', 'now'),

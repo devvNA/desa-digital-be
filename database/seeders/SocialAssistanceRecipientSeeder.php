@@ -18,7 +18,7 @@ class SocialAssistanceRecipientSeeder extends Seeder
         $headOfFamilies = HeadOfFamily::all();
 
         foreach ($socialAssistances as $socialAssistance) {
-            $recipients = $headOfFamilies->random(min(3, $headOfFamilies->count()));
+            $recipients = $headOfFamilies->random(min(5, $headOfFamilies->count()));
             foreach ($recipients as $headOfFamily) {
                 SocialAssistanceRecipient::factory()->create([
                     'head_of_family_id' => $headOfFamily->id,

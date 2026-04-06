@@ -15,7 +15,7 @@ class DevelopmentUpdateRequest extends FormRequest
             'person_in_charge' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'amount' => 'required|numeric',
+            'amount' => 'nullable|numeric',
             'status' => 'required|in:ongoing,completed',
         ];
     }

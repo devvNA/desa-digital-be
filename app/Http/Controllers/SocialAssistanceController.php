@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Requests\SocialAssistanceStoreRequest;
 use App\Http\Requests\SocialAssistanceUpdateRequest;
 use App\Http\Resources\PaginateResourse;
+use App\Http\Resources\SocialAssistanceDetailResource;
 use App\Http\Resources\SocialAssistanceResource;
 use App\Interfaces\SocialAssistanceRepositoryInterface;
 use Illuminate\Routing\Controllers\Middleware;
@@ -92,7 +93,7 @@ class SocialAssistanceController extends Controller implements HasMiddleware
                 return ResponseHelper::jsonResponse(false, 'Data Bantuan Sosial Tidak Ditemukan', null, 404);
             }
 
-            return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Diambil', SocialAssistanceResource::make($socialAssistance), 200);
+            return ResponseHelper::jsonResponse(true, 'Data Bantuan Sosial Berhasil Diambil', SocialAssistanceDetailResource::make($socialAssistance), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }

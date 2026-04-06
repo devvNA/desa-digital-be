@@ -12,7 +12,7 @@ class SocialAssistanceUpdateRequest extends FormRequest
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'name' => 'required|string|max:255',
             'category' => 'required|in:staple,cash,subsidized fuel,health',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|max:9999999999999',
             'provider' => 'required|string|max:255',
             'description' => 'required|string',
             'is_available' => 'required|boolean',

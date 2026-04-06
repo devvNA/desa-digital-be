@@ -43,7 +43,7 @@ class SocialAssistanceRepository implements SocialAssistanceRepositoryInterface
 
     public function getById(string $id)
     {
-        return SocialAssistance::with('socialAssistanceRecipient')
+        return SocialAssistance::with('socialAssistanceRecipient.headOfFamily.user')
             ->where('id', $id)
             ->first();
     }
