@@ -23,7 +23,7 @@ class ProfileController extends Controller
             $profile = $this->profileRepository->get();
 
             if (! $profile) {
-                return ResponseHelper::jsonResponse(false, 'Profile Tidak Ditemukan', null, 404);
+                return ResponseHelper::jsonResponse(false, 'Profile Tidak Ditemukan', null, 200);
             }
 
             return ResponseHelper::jsonResponse(true, 'Profile Berhasil Diambil', new ProfileResource($profile), 200);

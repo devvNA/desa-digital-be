@@ -16,11 +16,13 @@ class Profile extends Model
         'about',
         'headman',
         'people',
+        'address',
         'agricultural_area',
         'total_area',
     ];
 
     protected $casts = [
+        'people' => 'integer',
         'agricultural_area' => 'decimal:2',
         'total_area' => 'decimal:2',
     ];

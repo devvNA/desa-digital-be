@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('about');
             $table->string('headman');
             $table->integer('people');
+            $table->string('address');
             $table->decimal('agricultural_area', 15, 2);
             $table->decimal('total_area', 15, 2);
 

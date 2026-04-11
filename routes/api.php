@@ -47,10 +47,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile', [ProfileController::class, 'index']);
     Route::post('profile', [ProfileController::class, 'store']);
     Route::put('profile', [ProfileController::class, 'update']);
-    Route::post('profile/update', [ProfileController::class, 'update']);
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/me', [AuthController::class, 'me'])->name('me');
 });
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::middleware('auth:sanctum')->get('/me', [AuthController::class, 'me'])->name('me');

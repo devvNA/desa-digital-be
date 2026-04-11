@@ -21,7 +21,7 @@ class HeadofFamilyResource extends JsonResource
                 'name' => $this->user->name,
                 'email' => $this->user->email,
             ],
-            'profile_picture' => asset('storage/' . $this->profile_picture),
+            'profile_picture' => asset('storage/'.$this->profile_picture),
             'identity_number' => $this->identity_number,
             'gender' => $this->gender,
             'date_of_birth' => $this->date_of_birth,

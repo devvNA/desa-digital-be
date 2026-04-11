@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Helpers\ResponseHelper;
 use App\Http\Requests\EventStoreRequest;
 use App\Http\Requests\EventUpdateRequest;
+use App\Http\Resources\EventDetailResource;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\EventRepositoryInterface;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class EventController extends Controller implements HasMiddleware
@@ -93,7 +94,7 @@ class EventController extends Controller implements HasMiddleware
                 return ResponseHelper::jsonResponse(false, 'Data event tidak ditemukan', null, 404);
             }
 
-            return ResponseHelper::jsonResponse(true, 'Data event berhasil diambil', EventResource::make($event), 200);
+            return ResponseHelper::jsonResponse(true, 'Data event berhasil diambil', EventDetailResource::make($event), 200);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }

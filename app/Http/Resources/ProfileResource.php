@@ -20,9 +20,10 @@ class ProfileResource extends JsonResource
             'about' => $this->about,
             'headman' => $this->headman,
             'people' => (int) (string) $this->people,
+            'address' => $this->address,
             'agricultural_area' => (float) (string) $this->agricultural_area,
             'total_area' => (float) (string) $this->total_area,
-            'profile_images' => ProfileImageResource::collection($this->profileImages),
+            'profile_images' => ProfileImageResource::collection($this->whenLoaded('profileImages')),
         ];
     }
 }

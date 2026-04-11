@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,6 +21,13 @@ class Event extends Model
         'time',
         'is_active',
     ];
+
+    protected function time(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? Carbon::parse($value)->format('H:i') : null,
+        );
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

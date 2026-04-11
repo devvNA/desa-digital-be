@@ -28,6 +28,7 @@ class ProfileRepository implements ProfileRepositoryInterface
             $profile->about = $data['about'];
             $profile->headman = $data['headman'];
             $profile->people = $data['people'];
+            $profile->address = $data['address'];
             $profile->agricultural_area = $data['agricultural_area'];
             $profile->total_area = $data['total_area'];
             $profile->save();
@@ -67,6 +68,7 @@ class ProfileRepository implements ProfileRepositoryInterface
             $profile->about = $data['about'];
             $profile->headman = $data['headman'];
             $profile->people = $data['people'];
+            $profile->address = $data['address'];
             $profile->agricultural_area = $data['agricultural_area'];
             $profile->total_area = $data['total_area'];
             $profile->save();

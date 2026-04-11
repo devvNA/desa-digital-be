@@ -8,9 +8,9 @@ use App\Http\Requests\EventParticipantUpdateRequest;
 use App\Http\Resources\EventParticipantResource;
 use App\Http\Resources\PaginateResourse;
 use App\Interfaces\EventParticipantRepositoryInterface;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

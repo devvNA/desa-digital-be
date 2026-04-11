@@ -9,9 +9,9 @@ use App\Http\Resources\PaginateResourse;
 use App\Http\Resources\SocialAssistanceDetailResource;
 use App\Http\Resources\SocialAssistanceResource;
 use App\Interfaces\SocialAssistanceRepositoryInterface;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class SocialAssistanceController extends Controller implements HasMiddleware

@@ -17,6 +17,7 @@ class ProfileUpdateRequest extends FormRequest
             'about' => 'required|string',
             'headman' => 'required|string|max:255',
             'people' => 'required|integer',
+            'address' => 'required|string|max:255',
             'agricultural_area' => 'required|numeric',
             'total_area' => 'required|numeric',
             'images' => 'nullable|array',

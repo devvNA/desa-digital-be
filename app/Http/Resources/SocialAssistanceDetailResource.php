@@ -16,7 +16,7 @@ class SocialAssistanceDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'thumbnail' => asset('storage/' . $this->thumbnail),
+            'thumbnail' => asset('storage/'.$this->thumbnail),
             'name' => $this->name,
             'category' => $this->category,
             'amount' => $this->amount,
@@ -28,14 +28,14 @@ class SocialAssistanceDetailResource extends JsonResource
                 ->sortByDesc('created_at')
                 ->take(3)
                 ->values()
-                ->map(fn($recipient) => [
+                ->map(fn ($recipient) => [
                     'id' => $recipient->id,
                     'amount' => $recipient->amount,
                     'status' => $recipient->status,
                     'created_at' => $recipient->created_at,
                     'recipient_name' => $recipient->headOfFamily?->user?->name,
                     'recipient_profile_picture' => $recipient->headOfFamily?->profile_picture
-                        ? asset('storage/' . $recipient->headOfFamily->profile_picture)
+                        ? asset('storage/'.$recipient->headOfFamily->profile_picture)
                         : null,
                 ]),
         ];
