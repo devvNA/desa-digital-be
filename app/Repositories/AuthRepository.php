@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\AuthRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthRepository implements AuthRepositoryInterface
@@ -81,6 +82,10 @@ class AuthRepository implements AuthRepositoryInterface
             ?? $user->familyMembers?->profile_picture
             ?? $user->profile_picture;
 
+        $dateOfBirth = $user->headOfFamily?->date_of_birth ?? $user->familyMembers?->date_of_birth;
+        $occupation = $user->headOfFamily?->occupation ?? $user->familyMembers?->occupation;
+        $identityNumber = $user->headOfFamily?->identity_number ?? $user->familyMembers?->identity_number;
+
         return response()->json([
             'success' => true,
             'message' => 'User data',
@@ -92,7 +97,9 @@ class AuthRepository implements AuthRepositoryInterface
                 'profile_picture' => $profilePicture ? asset('storage/' . $profilePicture) : null,
                 'role' => $role,
                 'head_of_family_id' => $user->headOfFamily?->id,
-                'family_member_id' => $user->familyMembers?->id,
+                'occupation' => $occupation,
+                'identity_number' => $identityNumber,
+                'age' => $dateOfBirth ? Carbon::parse($dateOfBirth)->age : null,
             ],
         ], 200);
     }
