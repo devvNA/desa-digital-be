@@ -94,11 +94,16 @@ class HeadofFamilyRepository implements HeadOfFamilyRepositoryInterface
             $headOfFamily->save();
 
             $userRepository = new UserRepository;
-            $userRepository->update($headOfFamily->user_id, [
+            $userData = [
                 'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => isset($data['password']) ? bcrypt($data['password']) : $headOfFamily->user->password,
-            ]);
+                'email' => $data['email'] ?? $headOfFamily->user->email,
+            ];
+
+            if (! empty($data['password'])) {
+                $userData['password'] = $data['password'];
+            }
+
+            $userRepository->update($headOfFamily->user_id, $userData);
 
             DB::commit();
 

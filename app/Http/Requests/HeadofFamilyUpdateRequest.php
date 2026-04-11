@@ -16,13 +16,13 @@ class HeadofFamilyUpdateRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:users,email,'.$userId,
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $userId,
             'password' => 'nullable|string|min:8',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'identity_number' => 'required|string|max:255|unique:head_of_families,identity_number,'.$headOfFamilyId,
+            'identity_number' => 'required|string|max:255|unique:head_of_families,identity_number,' . $headOfFamilyId,
             'gender' => 'required|string|in:male,female',
             'date_of_birth' => 'required|date',
-            'phone_number' => 'required|string|max:255|unique:head_of_families,phone_number,'.$headOfFamilyId,
+            'phone_number' => 'required|string|max:255|unique:head_of_families,phone_number,' . $headOfFamilyId,
             'occupation' => 'required|string|max:255',
             'marital_status' => 'required|string|in:single,married',
         ];

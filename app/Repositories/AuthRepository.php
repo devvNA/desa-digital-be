@@ -77,9 +77,9 @@ class AuthRepository implements AuthRepositoryInterface
         $permissions = $user->roles->flatMap->permissions->pluck('name')->unique()->values();
         $role = optional($user->roles->first())->name;
 
-        $profilePicture = $user->profile_picture
-            ?? $user->headOfFamily?->profile_picture
-            ?? $user->familyMembers?->profile_picture;
+        $profilePicture = $user->headOfFamily?->profile_picture
+            ?? $user->familyMembers?->profile_picture
+            ?? $user->profile_picture;
 
         return response()->json([
             'success' => true,
@@ -91,6 +91,8 @@ class AuthRepository implements AuthRepositoryInterface
                 'permissions' => $permissions,
                 'profile_picture' => $profilePicture ? asset('storage/' . $profilePicture) : null,
                 'role' => $role,
+                'head_of_family_id' => $user->headOfFamily?->id,
+                'family_member_id' => $user->familyMembers?->id,
             ],
         ], 200);
     }

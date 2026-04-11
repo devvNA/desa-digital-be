@@ -50,7 +50,9 @@ class UserRepository implements UserRepositoryInterface
             $user->name = $data['name'];
             $user->email = $data['email'];
             $user->password = bcrypt($data['password']);
-            $user->profile_picture = $data['profile_picture'];
+            if (isset($data['profile_picture'])) {
+                $user->profile_picture = $data['profile_picture'];
+            }
             $user->save();
 
             DB::commit();
@@ -68,6 +70,9 @@ class UserRepository implements UserRepositoryInterface
         try {
             $user = User::find($id);
             $user->name = $data['name'];
+            if (isset($data['email'])) {
+                $user->email = $data['email'];
+            }
             if (isset($data['password'])) {
                 $user->password = bcrypt($data['password']);
             }

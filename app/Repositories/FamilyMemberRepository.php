@@ -24,6 +24,16 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
             $query->limit($limit);
         }
 
+        if (auth()->user()->hasRole('head-of-family')) {
+            $headOfFamilyId = auth()->user()?->headOfFamily?->id;
+
+            if (! $headOfFamilyId) {
+                return $execute ? collect() : $query->whereRaw('1 = 0');
+            }
+
+            $query->where('head_of_family_id', $headOfFamilyId);
+        }
+
         if ($execute) {
             return $query->get();
         }
@@ -99,11 +109,16 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
 
             $userRepository = new UserRepository;
 
-            $userRepository->update($familyMember->user_id, [
+            $userData = [
                 'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => isset($data['password']) ? bcrypt($data['password']) : $familyMember->user->password,
-            ]);
+                'email' => $data['email'] ?? $familyMember->user->email,
+            ];
+
+            if (! empty($data['password'])) {
+                $userData['password'] = $data['password'];
+            }
+
+            $userRepository->update($familyMember->user_id, $userData);
 
             DB::commit();
 
