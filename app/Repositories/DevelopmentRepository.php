@@ -4,17 +4,34 @@ namespace App\Repositories;
 
 use App\Interfaces\DevelopmentRepositoryInterface;
 use App\Models\Development;
+use App\Models\FamilyMember;
 use Illuminate\Support\Facades\DB;
 
 class DevelopmentRepository implements DevelopmentRepositoryInterface
 {
-    public function getAll(?string $search, ?int $limit, bool $execute)
+    public function getAll(?string $search,  ?string $status, ?int $limit, bool $execute,)
     {
-        $query = Development::where(function ($query) use ($search) {
-            if ($search) {
-                $query->search($search);
-            }
-        });
+        $query = Development::withCount('developmentApplicants')
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->search($search);
+                }
+            });
+
+        if ($status === 'my-applications') {
+            $query->whereHas('developmentApplicants', function ($query) {
+                $members = [];
+                $headOfFamily = auth()->user()->headOfFamily;
+                if ($headOfFamily) {
+                    $members = FamilyMember::where('head_of_family_id', $headOfFamily->id)
+                        ->pluck('user_id')
+                        ->toArray();
+                }
+                $members[] = auth()->user()->id;
+
+                $query->whereIn('user_id', $members);
+            });
+        }
 
         $query->orderBy('created_at', 'desc');
 
@@ -29,10 +46,10 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
         return $query;
     }
 
-    public function getAllPaginated(?string $search, ?int $rowPerPage)
+    public function getAllPaginated(?string $search, ?string $status, ?int $rowPerPage,)
     {
         try {
-            $query = $this->getAll($search, $rowPerPage, false);
+            $query = $this->getAll($search, $status, null, false);
 
             return $query->paginate($rowPerPage);
         } catch (\Exception $e) {
@@ -94,9 +111,10 @@ class DevelopmentRepository implements DevelopmentRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = Development::where('id', $id)->with('developmentApplicants.user')->first();
-
-        return $query;
+        return Development::where('id', $id)
+            ->withCount('developmentApplicants')
+            ->with('developmentApplicants.user')
+            ->first();
     }
 
     public function delete(string $id)

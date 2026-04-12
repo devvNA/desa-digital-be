@@ -10,11 +10,12 @@ class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryIn
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = DevelopmentApplicant::where(function ($query) use ($search) {
-            if ($search) {
-                $query->search($search);
-            }
-        });
+        $query = DevelopmentApplicant::with(['development', 'user'])
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->search($search);
+                }
+            });
 
         $query->orderBy('created_at', 'desc');
 
@@ -86,9 +87,9 @@ class DevelopmentApplicantRepository implements DevelopmentApplicantRepositoryIn
 
     public function getById(string $id)
     {
-        $query = DevelopmentApplicant::where('id', $id)->first();
-
-        return $query;
+        return DevelopmentApplicant::with(['development', 'user'])
+            ->where('id', $id)
+            ->first();
     }
 
     public function delete(string $id)

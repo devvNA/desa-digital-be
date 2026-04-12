@@ -4,9 +4,9 @@ namespace App\Interfaces;
 
 interface DevelopmentRepositoryInterface
 {
-    public function getAll(?string $search, ?int $limit, bool $execute);
+    public function getAll(?string $search, ?string $status, ?int $limit, bool $execute);
 
-    public function getAllPaginated(?string $search, ?int $rowPerPage);
+    public function getAllPaginated(?string $search, ?string $status, ?int $rowPerPage);
 
     public function create(array $data);
 

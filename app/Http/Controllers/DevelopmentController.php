@@ -39,7 +39,7 @@ class DevelopmentController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         try {
-            $development = $this->developmentRepository->getAll($request->search, $request->limit, true);
+            $development = $this->developmentRepository->getAll($request->search, $request->status, $request->limit ? (int) $request->limit : null, true);
 
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', DevelopmentResource::collection($development), 200);
         } catch (\Exception $e) {
@@ -51,13 +51,15 @@ class DevelopmentController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
+            'status' => 'nullable|string',
             'row_per_page' => 'required|integer',
         ]);
 
         try {
             $users = $this->developmentRepository->getAllPaginated(
                 $request['search'] ?? null,
-                $request['row_per_page']
+                $request['status'] ?? null,
+                (int) $request['row_per_page'],
             );
 
             return ResponseHelper::jsonResponse(true, 'Data Pembangunan berhasil diambil', new PaginateResourse($users, DevelopmentResource::class), 200);
