@@ -19,9 +19,9 @@ class EventFactory extends Factory
     {
         return [
             'thumbnail' => $this->faker->imageUrl(),
-            'name' => $this->faker->randomElement(['Belajar Bahasa Inggris', 'Jalan Sehat', 'Kerja Bakti', 'Pengajian']).' '.$this->faker->city(),
+            'name' => $this->faker->randomElement(['Belajar Bahasa Inggris', 'Jalan Sehat', 'Kerja Bakti', 'Pengajian']) . ' ' . $this->faker->city(),
             'description' => $this->faker->sentence(),
-            'price' => $this->faker->randomFloat(2, 100000, 1000000),
+            'price' => $this->faker->numberBetween(100000, 1000000),
             'date' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'time' => $this->faker->time('H:i'),
             'is_active' => $this->faker->boolean(),

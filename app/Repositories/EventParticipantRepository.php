@@ -6,6 +6,8 @@ use App\Interfaces\EventParticipantRepositoryInterface;
 use App\Models\Event;
 use App\Models\EventParticipant;
 use Illuminate\Support\Facades\DB;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class EventParticipantRepository implements EventParticipantRepositoryInterface
 {
@@ -66,6 +68,71 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
             $eventParticipant->save();
 
             DB::commit();
+
+            Config::$serverKey = config('midtrans.serverKey');
+            Config::$isProduction = config('midtrans.isProduction');
+            Config::$isSanitized = config('midtrans.isSanitized');
+            Config::$is3ds = config('midtrans.is3ds');
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $eventParticipant->id,
+                    'gross_amount' => (int) $eventParticipant->total_price,
+                ],
+                'item_details' => [
+                    [
+                        'id' => $event->id,
+                        'price' => (int) $event->price,
+                        'quantity' => (int) $eventParticipant->quantity,
+                        'name' => $event->name,
+                        'brand' => 'Desa Digital',
+                        'category' => 'Event Ticket',
+                        'merchant_name' => 'Desa Digital'
+                    ],
+                ],
+                'customer_details' => [
+                    'first_name' => auth()->user()->name,
+                    'last_name' => 'XXX',
+                    'email' => auth()->user()->email,
+                    'phone' => '082142185804',
+                    'billing_address' => [
+                        'first_name' => 'Budi',
+                        'last_name' => 'Susanto',
+                        'email' => 'budi@example.com',
+                        'phone' => '08123456789',
+                        'address' => 'Sudirman No.12',
+                        'city' => 'Jakarta',
+                        'postal_code' => '12190',
+                        'country_code' => 'IDN',
+                    ],
+                    'shipping_address' => [
+                        'first_name' => 'Budi',
+                        'last_name' => 'Susanto',
+                        'email' => 'budi@example.com',
+                        'phone' => '0812345678910',
+                        'address' => 'Sudirman',
+                        'city' => 'Jakarta',
+                        'postal_code' => '12190',
+                        'country_code' => 'IDN',
+                    ],
+                ],
+                // 'customer_details' => [
+                //     'first_name' => auth()->user()->name,
+                //     'last_name' => 'XXX',
+                //     'email' => 'devit@app.com',
+                //     'phone' => '082142185804',
+                //     'billing_address' => 'Jl. Raya No. 123',
+                //     'shipping_address' => 'Jl. Raya No. 123',
+                // ],
+                "custom_expiry" => [
+                    "expiry_duration" => 1,
+                    "unit" => "day"
+                ],
+
+            ];
+
+            $snapToken = Snap::getSnapToken($params);
+            $eventParticipant->snap_token = $snapToken;
 
             return $eventParticipant;
         } catch (\Exception $e) {

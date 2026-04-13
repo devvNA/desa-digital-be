@@ -8,13 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class EventRepository implements EventRepositoryInterface
 {
-    public function getAll(?string $search, ?int $limit, bool $execute)
+    public function getAll(?string $search, ?string $status, ?int $limit, bool $execute)
     {
         $query = Event::where(function ($query) use ($search) {
             if ($search) {
                 $query->search($search);
             }
         });
+
+        if ($status === 'joined') {
+            $query->whereHas('eventParticipants', function ($query) {
+                $query->where('head_of_family_id', auth()->user()->headOfFamily->id);
+            });
+        }
 
         $query->orderBy('created_at', 'desc');
 
@@ -29,10 +35,10 @@ class EventRepository implements EventRepositoryInterface
         return $query;
     }
 
-    public function getAllPaginated(?string $search, ?int $rowPerPage)
+    public function getAllPaginated(?string $search, ?string $status, ?int $rowPerPage)
     {
         try {
-            $query = $this->getAll($search, $rowPerPage, false);
+            $query = $this->getAll($search, $status, $rowPerPage, false);
 
             return $query->paginate($rowPerPage);
         } catch (\Exception $e) {

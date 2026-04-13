@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventParticipantController;
 use App\Http\Controllers\FamilyMemberController;
 use App\Http\Controllers\HeadofFamilyController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialAssistanceController;
 use App\Http\Controllers\SocialAssistanceRecipientController;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::get('dashboard/head-of-family', [DashboardController::class, 'headOfFamily']);
 
     Route::apiResource('user', UserController::class);
     Route::get('user/all/paginated', [UserController::class, 'getAllPaginated']);
@@ -54,3 +56,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+Route::post('/midtrans/callback', [MidtransController::class, 'callback']);

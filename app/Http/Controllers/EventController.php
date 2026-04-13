@@ -39,7 +39,7 @@ class EventController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         try {
-            $event = $this->eventRepository->getAll($request->search, $request->limit, true);
+            $event = $this->eventRepository->getAll($request->search, $request->status, $request->limit, true);
 
             return ResponseHelper::jsonResponse(true, 'Data event berhasil diambil', EventResource::collection($event), 200);
         } catch (\Exception $e) {
@@ -51,12 +51,14 @@ class EventController extends Controller implements HasMiddleware
     {
         $request = $request->validate([
             'search' => 'nullable|string',
+            'status' => 'nullable|string',
             'row_per_page' => 'required|integer',
         ]);
 
         try {
             $users = $this->eventRepository->getAllPaginated(
                 $request['search'] ?? null,
+                $request['status'] ?? null,
                 $request['row_per_page']
             );
 
