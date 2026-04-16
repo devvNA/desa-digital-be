@@ -11,6 +11,7 @@ use App\Interfaces\EventRepositoryInterface;
 use App\Interfaces\FamilyMemberRepositoryInterface;
 use App\Interfaces\HeadOfFamilyRepositoryInterface;
 use App\Interfaces\ProfileRepositoryInterface;
+use App\Interfaces\SearchRepositoryInterface;
 use App\Interfaces\SocialAssistanceRecipientRepositoryInterface;
 use App\Interfaces\SocialAssistanceRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
@@ -23,6 +24,7 @@ use App\Repositories\EventRepository;
 use App\Repositories\FamilyMemberRepository;
 use App\Repositories\HeadofFamilyRepository;
 use App\Repositories\ProfileRepository;
+use App\Repositories\SearchRepository;
 use App\Repositories\SocialAssistanceRecipientRepository;
 use App\Repositories\SocialAssistanceRepository;
 use App\Repositories\UserRepository;
@@ -47,6 +49,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(DashboardRepositoryInterface::class, DashboardRepository::class);
+        $this->app->bind(SearchRepositoryInterface::class, SearchRepository::class);
     }
 
     /**

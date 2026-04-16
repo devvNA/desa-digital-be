@@ -4,7 +4,7 @@
 
 - Laravel 12 API on PHP 8.2 with Sanctum auth, Spatie permissions, Pest tests, and Vite + Tailwind for the default welcome page.
 - API modules follow `controller -> interface -> repository -> resource`, with bindings in `app/Providers/RepositoryServiceProvider.php`.
-- Domain areas include users, head of family, family members, social assistance, events, developments, dashboard metrics, auth, and village profile.
+- Domain areas include users, head of family, family members, social assistance, events, developments, dashboard metrics, global search, auth, and village profile.
 - Read `TECHNICAL_OVERVIEW.md` for architecture and runtime details.
 - Read `DESIGN_SYSTEM.md` for frontend and styling findings.
 

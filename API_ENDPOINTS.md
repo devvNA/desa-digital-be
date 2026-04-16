@@ -1,6 +1,6 @@
 # Rincian API Endpoint
 
-Berdasarkan hasil pengecekan sistem saat ini (`php artisan route:list --path=api`), terdapat **Total 64 API Endpoints** yang telah berhasil dibuat.
+Berdasarkan hasil pengecekan sistem saat ini (`php artisan route:list --path=api`), terdapat **Total 65 API Endpoints** yang telah berhasil dibuat.
 
 Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulnya:
 
@@ -16,10 +16,14 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 
 ## 2. Dashboard
 
-- `GET /api/dashboard` - Ringkasan data dashboard admin
+- `GET /api/dashboard` - Ringkasan agregat data dashboard admin mencakup statistik pertumbuhan, bantuan sosial terbaru, acara mendatang, data pelamar pembangunan terbaru, dan demografi penduduk (berdasarkan usia & gender)
 - `GET /api/dashboard/head-of-family` - Ringkasan data dashboard khusus kepala keluarga
 
-## 3. User Management
+## 3. Search
+
+- `GET /api/search?q={keyword}` - Pencarian global berdasarkan nama kepala keluarga, mengembalikan data dari 4 kategori: List Bansos, Pengajuan Bansos, Pembangunan, dan Event Desa
+
+## 4. User Management
 
 - `GET /api/user` - Mengambil seluruh data pengguna
 - `POST /api/user` - Menambahkan pengguna baru
@@ -28,7 +32,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/user/{user}` - Mengubah data pengguna
 - `DELETE /api/user/{user}` - Menghapus data pengguna
 
-## 4. Head Of Family (Kepala Keluarga)
+## 5. Head Of Family (Kepala Keluarga)
 
 - `GET /api/head-of-family` - Mengambil seluruh data kepala keluarga
 - `POST /api/head-of-family` - Menambahkan data kepala keluarga
@@ -37,7 +41,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/head-of-family/{head_of_family}` - Mengubah data
 - `DELETE /api/head-of-family/{head_of_family}` - Menghapus data
 
-## 5. Family Member (Anggota Keluarga)
+## 6. Family Member (Anggota Keluarga)
 
 - `GET /api/family-member` - Mengambil data anggota keluarga
 - `POST /api/family-member` - Menambahkan anggota keluarga
@@ -46,7 +50,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/family-member/{family_member}` - Mengubah anggota
 - `DELETE /api/family-member/{family_member}` - Menghapus anggota
 
-## 6. Social Assistance (Bantuan Sosial)
+## 7. Social Assistance (Bantuan Sosial)
 
 - `GET /api/social-assistance` - List program bantuan sosial
 - `POST /api/social-assistance` - Menambah program
@@ -55,7 +59,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/social-assistance/{social_assistance}` - Edit program
 - `DELETE /api/social-assistance/{social_assistance}` - Hapus program
 
-## 7. Social Assistance Recipient (Penerima Bantuan Sosial)
+## 8. Social Assistance Recipient (Penerima Bantuan Sosial)
 
 - `GET /api/social-assistance-recipient` - List penerima bantuan
 - `POST /api/social-assistance-recipient` - Menambah penerima
@@ -64,7 +68,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/social-assistance-recipient/{social_assistance_recipient}` - Ubah penerima
 - `DELETE /api/social-assistance-recipient/{social_assistance_recipient}` - Hapus penerima
 
-## 8. Event (Acara)
+## 9. Event (Acara)
 
 - `GET /api/event` - List acara
 - `POST /api/event` - Membuat acara
@@ -73,7 +77,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/event/{event}` - Mengubah acara
 - `DELETE /api/event/{event}` - Menghapus acara
 
-## 9. Event Participant (Peserta Acara)
+## 10. Event Participant (Peserta Acara)
 
 - `GET /api/event-participant` - List peserta acara
 - `POST /api/event-participant` - Mendaftar acara
@@ -82,7 +86,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/event-participant/{event_participant}` - Edit kepesertaan
 - `DELETE /api/event-participant/{event_participant}` - Hapus peserta
 
-## 10. Development (Pembangunan)
+## 11. Development (Pembangunan)
 
 - `GET /api/development` - List program pembangunan
 - `POST /api/development` - Membuat program pembangunan baru
@@ -91,7 +95,7 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/development/{development}` - Memperbarui pembangunan
 - `DELETE /api/development/{development}` - Menghapus pembangunan
 
-## 11. Development Applicant (Pendaftar Pekerja Pembangunan)
+## 12. Development Applicant (Pendaftar Pekerja Pembangunan)
 
 - `GET /api/development-applicant` - List pendaftar pekerja
 - `POST /api/development-applicant` - Mendaftar sbg pekerja
@@ -100,6 +104,6 @@ Berikut adalah rincian semua API endpoint yang dikelompokkan berdasarkan modulny
 - `PUT|PATCH /api/development-applicant/{development_applicant}` - Ubah pendaftar
 - `DELETE /api/development-applicant/{development_applicant}` - Hapus pendaftar
 
-## 12. Layanan Eksternal (Midtrans / Payment Gateway)
+## 13. Layanan Eksternal (Midtrans / Payment Gateway)
 
 - `POST /api/midtrans/callback` - Webhook callback dari Midtrans

@@ -19,7 +19,8 @@
 | Module                       | Main entrypoints                                                                                                                                                       | Responsibility                                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | Auth                         | `app/Http/Controllers/AuthController.php`, `app/Repositories/AuthRepository.php`                                                                                       | Login, logout, current-user lookup, Sanctum token issuance and deletion                           |
-| Dashboard                    | `app/Http/Controllers/DashboardController.php`, `app/Repositories/DashboardRepository.php`                                                                             | Aggregate counts for residents, head of families, assistance recipients, events, and developments |
+| Dashboard                    | `app/Http/Controllers/DashboardController.php`, `app/Repositories/DashboardRepository.php`                                                                             | Aggregate counts and growth metrics (MoM) for demographics, social assistance, upcoming events, and development applicants, formatted for the admin UI |
+| Search                       | `app/Http/Controllers/SearchController.php`, `app/Repositories/SearchRepository.php`                                                                                   | Global search by head-of-family name across social assistance programs, recipients, developments, and events                                           |
 | Users                        | `app/Http/Controllers/UserController.php`, `app/Repositories/UserRepository.php`, `app/Models/User.php`                                                                | CRUD for application users, password hashing, role-enabled identity model                         |
 | Head of family               | `app/Http/Controllers/HeadofFamilyController.php`, `app/Repositories/HeadofFamilyRepository.php`, `app/Models/HeadOfFamily.php`                                        | CRUD for household heads plus linked `users` records and profile-photo upload                     |
 | Family members               | `app/Http/Controllers/FamilyMemberController.php`, `app/Repositories/FamilyMemberRepository.php`, `app/Models/FamilyMember.php`                                        | CRUD for household members linked to a head of family and a `users` row                           |
@@ -59,6 +60,7 @@
 | ---------------------------------------------- | ------------------------------------- |
 | `AuthRepositoryInterface`                      | `AuthRepository`                      |
 | `DashboardRepositoryInterface`                 | `DashboardRepository`                 |
+| `SearchRepositoryInterface`                    | `SearchRepository`                    |
 | `UserRepositoryInterface`                      | `UserRepository`                      |
 | `HeadOfFamilyRepositoryInterface`              | `HeadofFamilyRepository`              |
 | `FamilyMemberRepositoryInterface`              | `FamilyMemberRepository`              |
@@ -83,7 +85,7 @@
 
 ### API Surface
 
-Authenticated routes in `routes/api.php` expose `dashboard`, `user`, `head-of-family`, `family-member`, `social-assistance`, `social-assistance-recipient`, `event`, `event-participant`, `development`, `development-applicant`, `profile`, `logout`, and `me`.
+Authenticated routes in `routes/api.php` expose `dashboard`, `search`, `user`, `head-of-family`, `family-member`, `social-assistance`, `social-assistance-recipient`, `event`, `event-participant`, `development`, `development-applicant`, `profile`, `logout`, and `me`.
 
 Public routes in `routes/api.php` expose `login` and `register`. `AuthController` implements `login`, `logout`, and `me`; no `register` method is defined in `app/Http/Controllers/AuthController.php`.
 
