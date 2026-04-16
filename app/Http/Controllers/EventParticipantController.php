@@ -67,16 +67,17 @@ class EventParticipantController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store: generates a Midtrans snap token without persisting to DB.
+     * The row is only created after Midtrans confirms payment via callback.
      */
     public function store(EventParticipantStoreRequest $request)
     {
         $request = $request->validated();
 
         try {
-            $eventParticipant = $this->eventParticipantRepository->create($request);
+            $data = $this->eventParticipantRepository->create($request);
 
-            return ResponseHelper::jsonResponse(true, 'Data Peserta Event Berhasil Ditambahkan', EventParticipantResource::make($eventParticipant), 201);
+            return ResponseHelper::jsonResponse(true, 'Snap token berhasil dibuat. Lanjutkan pembayaran.', $data, 201);
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(false, $e->getMessage(), null, 500);
         }

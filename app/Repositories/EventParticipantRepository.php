@@ -6,20 +6,25 @@ use App\Interfaces\EventParticipantRepositoryInterface;
 use App\Models\Event;
 use App\Models\EventParticipant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
 
 class EventParticipantRepository implements EventParticipantRepositoryInterface
 {
+    /**
+     * Relations needed by EventParticipantResource.
+     */
+    private function resourceRelations(): array
+    {
+        return ['event', 'headOfFamily.user'];
+    }
+
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = EventParticipant::where(function ($query) use ($search) {
-            if ($search) {
-                $query->search($search);
-            }
-        });
-
-        $query->orderBy('created_at', 'desc');
+        $query = EventParticipant::with($this->resourceRelations())
+            ->when($search, fn ($q, $s) => $q->search($s))
+            ->orderBy('created_at', 'desc');
 
         if (auth()->user()->hasRole('head-of-family')) {
             $headOfFamilyId = auth()->user()?->headOfFamily?->id;
@@ -35,17 +40,13 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
             $query->limit($limit);
         }
 
-        if ($execute) {
-            return $query->get();
-        }
-
-        return $query;
+        return $execute ? $query->get() : $query;
     }
 
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         try {
-            $query = $this->getAll($search, $rowPerPage, false);
+            $query = $this->getAll($search, null, false);
 
             return $query->paginate($rowPerPage);
         } catch (\Exception $e) {
@@ -53,103 +54,113 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
         }
     }
 
-    public function create(array $data)
+    public function getById(string $id)
     {
-        DB::beginTransaction();
-        try {
-            $event = Event::where('id', $data['event_id'])->first();
+        return EventParticipant::with($this->resourceRelations())
+            ->where('id', $id)
+            ->first();
+    }
 
-            $eventParticipant = new EventParticipant;
-            $eventParticipant->event_id = $data['event_id'];
-            $eventParticipant->head_of_family_id = $data['head_of_family_id'];
-            $eventParticipant->quantity = $data['quantity'];
-            $eventParticipant->total_price = $event->price * $data['quantity'];
-            $eventParticipant->payment_status = $eventParticipant->payment_status ?? 'pending';
-            $eventParticipant->save();
+    /**
+     * Generate a Midtrans snap token WITHOUT persisting to DB.
+     * The actual row is created only when Midtrans confirms payment via callback.
+     *
+     * Returns an associative array with the order metadata + snap_token
+     * so the frontend can proceed to the payment page.
+     */
+    public function create(array $data): array
+    {
+        $event = Event::findOrFail($data['event_id']);
 
-            DB::commit();
+        $orderId = (string) Str::uuid();
+        $quantity = (int) $data['quantity'];
+        $totalPrice = (int) ($event->price * $quantity);
 
-            Config::$serverKey = config('midtrans.serverKey');
-            Config::$isProduction = config('midtrans.isProduction');
-            Config::$isSanitized = config('midtrans.isSanitized');
-            Config::$is3ds = config('midtrans.is3ds');
+        // --- Midtrans snap token ---
+        Config::$serverKey = config('midtrans.serverKey');
+        Config::$isProduction = config('midtrans.isProduction');
+        Config::$isSanitized = config('midtrans.isSanitized');
+        Config::$is3ds = config('midtrans.is3ds');
 
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $eventParticipant->id,
-                    'gross_amount' => (int) $eventParticipant->total_price,
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => $totalPrice,
+            ],
+            'item_details' => [
+                [
+                    'id' => $event->id,
+                    'price' => (int) $event->price,
+                    'quantity' => $quantity,
+                    'name' => $event->name,
+                    'brand' => 'Desa Digital',
+                    'category' => 'Event Ticket',
+                    'merchant_name' => 'Desa Digital',
                 ],
-                'item_details' => [
-                    [
-                        'id' => $event->id,
-                        'price' => (int) $event->price,
-                        'quantity' => (int) $eventParticipant->quantity,
-                        'name' => $event->name,
-                        'brand' => 'Desa Digital',
-                        'category' => 'Event Ticket',
-                        'merchant_name' => 'Desa Digital'
-                    ],
-                ],
-                'customer_details' => [
-                    'first_name' => auth()->user()->name,
-                    'last_name' => 'XXX',
-                    'email' => auth()->user()->email,
-                    'phone' => '082142185804',
-                    'billing_address' => [
-                        'first_name' => 'Budi',
-                        'last_name' => 'Susanto',
-                        'email' => 'budi@example.com',
-                        'phone' => '08123456789',
-                        'address' => 'Sudirman No.12',
-                        'city' => 'Jakarta',
-                        'postal_code' => '12190',
-                        'country_code' => 'IDN',
-                    ],
-                    'shipping_address' => [
-                        'first_name' => 'Budi',
-                        'last_name' => 'Susanto',
-                        'email' => 'budi@example.com',
-                        'phone' => '0812345678910',
-                        'address' => 'Sudirman',
-                        'city' => 'Jakarta',
-                        'postal_code' => '12190',
-                        'country_code' => 'IDN',
-                    ],
-                ],
-                // 'customer_details' => [
-                //     'first_name' => auth()->user()->name,
-                //     'last_name' => 'XXX',
-                //     'email' => 'devit@app.com',
-                //     'phone' => '082142185804',
-                //     'billing_address' => 'Jl. Raya No. 123',
-                //     'shipping_address' => 'Jl. Raya No. 123',
-                // ],
-                "custom_expiry" => [
-                    "expiry_duration" => 1,
-                    "unit" => "day"
-                ],
+            ],
+            'customer_details' => [
+                'first_name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+            ],
+            'custom_expiry' => [
+                'expiry_duration' => 1,
+                'unit' => 'day',
+            ],
+            // custom_field values are echoed back in Midtrans webhook notifications.
+            'custom_field1' => $data['head_of_family_id'],
+            'custom_field2' => $event->id,
+            'custom_field3' => (string) $quantity,
+        ];
 
-            ];
+        $snapToken = Snap::getSnapToken($params);
 
-            $snapToken = Snap::getSnapToken($params);
-            $eventParticipant->snap_token = $snapToken;
+        return [
+            'order_id' => $orderId,
+            'event_id' => $event->id,
+            'head_of_family_id' => $data['head_of_family_id'],
+            'quantity' => $quantity,
+            'total_price' => $totalPrice,
+            'payment_status' => 'pending',
+            'snap_token' => $snapToken,
+        ];
+    }
 
-            return $eventParticipant;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception($e->getMessage());
-        }
+    /**
+     * Called by the Midtrans callback when payment is confirmed (settlement/capture).
+     * Only at this point do we persist the event participant row.
+     */
+    public function confirmPayment(string $orderId, array $orderMeta): EventParticipant
+    {
+        return DB::transaction(function () use ($orderId, $orderMeta) {
+            $participant = new EventParticipant;
+            $participant->id = $orderId;
+            $participant->event_id = $orderMeta['event_id'];
+            $participant->head_of_family_id = $orderMeta['head_of_family_id'];
+            $participant->quantity = $orderMeta['quantity'];
+            $participant->total_price = $orderMeta['total_price'];
+            $participant->payment_status = 'paid';
+            $participant->save();
+
+            return $participant;
+        });
     }
 
     public function update(string $id, array $data)
     {
         DB::beginTransaction();
         try {
-            $event = Event::where('id', $data['event_id'])->first();
+            $eventParticipant = EventParticipant::findOrFail($id);
 
-            $eventParticipant = EventParticipant::find($id);
-            $eventParticipant->event_id = $data['event_id'];
-            $eventParticipant->head_of_family_id = $data['head_of_family_id'];
+            if (isset($data['event_id'])) {
+                $event = Event::findOrFail($data['event_id']);
+                $eventParticipant->event_id = $data['event_id'];
+            } else {
+                $event = $eventParticipant->event;
+            }
+
+            if (isset($data['head_of_family_id'])) {
+                $eventParticipant->head_of_family_id = $data['head_of_family_id'];
+            }
 
             if (isset($data['quantity'])) {
                 $eventParticipant->quantity = $data['quantity'];
@@ -171,18 +182,11 @@ class EventParticipantRepository implements EventParticipantRepositoryInterface
         }
     }
 
-    public function getById(string $id)
-    {
-        $query = EventParticipant::where('id', $id)->first();
-
-        return $query;
-    }
-
     public function delete(string $id)
     {
         DB::beginTransaction();
         try {
-            $eventParticipant = EventParticipant::find($id);
+            $eventParticipant = EventParticipant::findOrFail($id);
             $eventParticipant->delete();
 
             DB::commit();

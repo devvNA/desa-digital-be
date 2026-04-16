@@ -8,7 +8,9 @@ interface EventParticipantRepositoryInterface
 
     public function getAllPaginated(?string $search, ?int $rowPerPage);
 
-    public function create(array $data);
+    public function create(array $data): array;
+
+    public function confirmPayment(string $orderId, array $orderMeta): \App\Models\EventParticipant;
 
     public function update(string $id, array $data);
 
