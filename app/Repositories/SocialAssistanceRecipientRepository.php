@@ -8,14 +8,21 @@ use Illuminate\Support\Facades\DB;
 
 class SocialAssistanceRecipientRepository implements SocialAssistanceRecipientRepositoryInterface
 {
+    /**
+     * Relations required by SocialAssistanceRecipientResource → SocialAssistanceResource / HeadofFamilyResource.
+     */
+    private function resourceRelations(): array
+    {
+        return [
+            'socialAssistance' => fn($q) => $q->withCount('socialAssistanceRecipient'),
+            'headOfFamily.user',
+        ];
+    }
+
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = SocialAssistanceRecipient::where(function ($query) use ($search) {
-
-            if ($search) {
-                $query->search($search);
-            }
-        });
+        $query = SocialAssistanceRecipient::with($this->resourceRelations())
+            ->when($search, fn($q, $s) => $q->search($s));
 
         $query->orderBy('created_at', 'desc');
 
@@ -43,7 +50,7 @@ class SocialAssistanceRecipientRepository implements SocialAssistanceRecipientRe
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         try {
-            $query = $this->getAll($search, $rowPerPage, false);
+            $query = $this->getAll($search, null, false);
 
             return $query->paginate($rowPerPage);
         } catch (\Exception $e) {
@@ -53,9 +60,9 @@ class SocialAssistanceRecipientRepository implements SocialAssistanceRecipientRe
 
     public function getById(string $id)
     {
-        $query = SocialAssistanceRecipient::where('id', $id);
-
-        return $query->first();
+        return SocialAssistanceRecipient::with($this->resourceRelations())
+            ->where('id', $id)
+            ->first();
     }
 
     public function create(array $data)
